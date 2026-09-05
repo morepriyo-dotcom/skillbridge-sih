@@ -1,0 +1,429 @@
+{
+  "communities": {
+    "0": [
+      "lib_utils_formatcurrency",
+      "lib_utils_formatdate",
+      "lib_utils_getinitials",
+      "lib_utils_proficiencyweight",
+      "lib_utils_truncate",
+      "mentorship_page_getinitials",
+      "queries_mentorship_getavailablementors",
+      "queries_mentorship_getmymentorshipsessions",
+      "queries_opportunities_getactiveopportunities",
+      "queries_opportunities_getmyopportunities",
+      "queries_opportunities_getopportunitybyid",
+      "src_app_marketing_page_tsx",
+      "src_app_portal_mentorship_page_tsx",
+      "src_app_portal_opportunities_id_page_tsx",
+      "src_app_portal_opportunities_page_tsx",
+      "src_app_portal_portfolio_page_tsx",
+      "src_components_ui_badge_tsx",
+      "src_lib_utils_ts",
+      "src_queries_mentorship_ts",
+      "src_queries_opportunities_ts",
+      "ui_badge_badge"
+    ],
+    "1": [
+      "components_empty_state_rendericon",
+      "lib_utils_cn",
+      "src_components_empty_state_tsx",
+      "src_components_spotlight_card_tsx",
+      "src_components_ui_button_tsx",
+      "src_components_ui_card_tsx",
+      "src_components_ui_dialog_tsx",
+      "src_components_ui_input_tsx",
+      "src_components_ui_select_tsx",
+      "src_components_ui_skeleton_tsx",
+      "src_components_ui_table_tsx",
+      "src_components_ui_tabs_tsx",
+      "src_components_ui_textarea_tsx",
+      "ui_dialog_handlecancel",
+      "ui_select_cn",
+      "ui_skeleton_skeleton",
+      "ui_tabs_tabs",
+      "ui_tabs_tabscontent",
+      "ui_tabs_tabslist",
+      "ui_tabs_tabstrigger"
+    ],
+    "2": [
+      "actions_auth_forgotpassword",
+      "actions_auth_getcurrentuser",
+      "actions_auth_resetpassword",
+      "actions_auth_signin",
+      "actions_auth_signout",
+      "actions_auth_signup",
+      "forgot_password_page_handlesubmit",
+      "login_page_onsubmit",
+      "register_page_onsubmit",
+      "src_actions_auth_ts",
+      "src_app_auth_forgot_password_page_tsx",
+      "src_app_auth_login_page_tsx",
+      "src_app_auth_register_page_tsx",
+      "src_app_portal_portalsidebar_tsx",
+      "src_lib_supabase_server_ts",
+      "supabase_server_createadminclient"
+    ],
+    "3": [
+      "actions_collaborations_proposecollaboration",
+      "actions_collaborations_schedulementorship",
+      "actions_collaborations_updatecollaborationstatus",
+      "actions_profile_updateacademiciandetails",
+      "actions_profile_updateprofile",
+      "actions_profile_updatestudentdetails",
+      "callback_route_get",
+      "queries_analytics_getinstitutionanalytics",
+      "src_actions_collaborations_ts",
+      "src_actions_profile_ts",
+      "src_app_auth_callback_route_ts",
+      "src_app_portal_institution_analytics_page_tsx",
+      "src_queries_analytics_ts",
+      "supabase_server_createclient"
+    ],
+    "4": [
+      "auth_layout_authlayout",
+      "components_portal_breadcrumb_portalbreadcrumb",
+      "components_theme_toggle_themetoggle",
+      "marketing_layout_marketinglayout",
+      "portal_layout_portallayout",
+      "src_app_auth_layout_tsx",
+      "src_app_marketing_layout_tsx",
+      "src_app_portal_layout_tsx",
+      "src_components_portal_breadcrumb_tsx",
+      "src_components_theme_toggle_tsx"
+    ],
+    "5": [
+      "id_page_assessmentpage",
+      "queries_skills_getassessmentwithquestions",
+      "queries_skills_getavailableassessments",
+      "queries_skills_getmyassessmentresults",
+      "queries_skills_getskilltaxonomy",
+      "queries_skills_getuserskills",
+      "src_app_portal_skills_assessments_id_page_tsx",
+      "src_app_portal_skills_assessments_page_tsx",
+      "src_app_portal_skills_page_tsx",
+      "src_queries_skills_ts"
+    ],
+    "6": [
+      "design_accent_blue",
+      "design_button_primary",
+      "design_dark_canvas",
+      "design_framer_marketing_system",
+      "design_gradient_spotlight_cards",
+      "design_gt_walsheim_medium",
+      "design_inter_variable",
+      "design_responsive_behavior",
+      "design_surface_lift",
+      "design_typography_system"
+    ],
+    "7": [
+      "queries_dashboard_getacademiciandashboard",
+      "queries_dashboard_getadmindashboard",
+      "queries_dashboard_getdashboardstats",
+      "queries_dashboard_getindustrydashboard",
+      "queries_dashboard_getinstitutiondashboard",
+      "queries_dashboard_getprofile",
+      "queries_dashboard_getstudentdashboard",
+      "src_app_portal_dashboard_page_tsx",
+      "src_queries_dashboard_ts"
+    ],
+    "8": [
+      "actions_applications_applytoopportunity",
+      "actions_applications_updateapplicationstatus",
+      "actions_applications_withdrawapplication",
+      "applicants_recruiter_kanban_recruiterkanban",
+      "id_apply_button_handlesubmit",
+      "src_actions_applications_ts",
+      "src_app_portal_opportunities_id_apply_button_tsx",
+      "src_app_portal_recruiter_applicants_recruiter_kanban_tsx"
+    ],
+    "9": [
+      "actions_skills_adduserskill",
+      "actions_skills_removeuserskill",
+      "actions_skills_submitassessment",
+      "actions_skills_updateskillproficiency",
+      "id_assessment_runner_formattime",
+      "id_assessment_runner_handleselect",
+      "src_actions_skills_ts",
+      "src_app_portal_skills_assessments_id_assessment_runner_tsx"
+    ],
+    "10": [
+      "applicants_page_recruiterapplicantspage",
+      "queries_applications_getallmyapplicants",
+      "queries_applications_getapplicantsforopportunity",
+      "queries_applications_getmyapplications",
+      "src_app_portal_applications_page_tsx",
+      "src_app_portal_recruiter_applicants_page_tsx",
+      "src_queries_applications_ts"
+    ],
+    "11": [
+      "src_lib_supabase_middleware_ts",
+      "src_middleware_isauthroute",
+      "src_middleware_isportalroute",
+      "src_middleware_middleware",
+      "src_middleware_ts",
+      "supabase_middleware_updatesession"
+    ],
+    "12": [
+      "actions_opportunities_createopportunity",
+      "actions_opportunities_incrementopportunityviews",
+      "actions_opportunities_updateopportunitystatus",
+      "post_opportunity_page_handlesubmit",
+      "src_actions_opportunities_ts",
+      "src_app_portal_recruiter_post_opportunity_page_tsx"
+    ],
+    "13": [
+      "next_nextjs_wordmark",
+      "readme_development_server",
+      "readme_next_font_geist",
+      "readme_nextjs_project",
+      "vercel_vercel_mark"
+    ],
+    "14": [
+      "app_layout_rootlayout",
+      "components_theme_provider_themeprovider",
+      "src_app_layout_tsx",
+      "src_components_theme_provider_tsx"
+    ],
+    "15": [
+      "queries_collaborations_getcollaborationstats",
+      "queries_collaborations_getmycollaborations",
+      "src_app_portal_collaborations_page_tsx",
+      "src_queries_collaborations_ts"
+    ],
+    "16": [
+      "hooks_use_auth_useauth",
+      "src_hooks_use_auth_ts",
+      "src_lib_supabase_client_ts",
+      "supabase_client_createclient"
+    ],
+    "17": [
+      "hooks_use_media_query_useisdesktop",
+      "hooks_use_media_query_usemediaquery",
+      "src_hooks_use_media_query_ts"
+    ],
+    "18": [
+      "hooks_use_debounce_usedebounce",
+      "src_hooks_use_debounce_ts"
+    ],
+    "19": [
+      "agents_nextjs_agent_rules",
+      "claude_agents_md"
+    ],
+    "20": [
+      "eslint_config_mjs"
+    ],
+    "21": [
+      "next_env_d_ts"
+    ],
+    "22": [
+      "next_config_ts"
+    ],
+    "23": [
+      "postcss_config_mjs"
+    ],
+    "24": [
+      "src_components_skills_skill_radar_chart_tsx"
+    ],
+    "25": [
+      "src_lib_constants_ts"
+    ],
+    "26": [
+      "src_lib_validators_auth_ts"
+    ],
+    "27": [
+      "src_lib_validators_opportunity_ts"
+    ],
+    "28": [
+      "src_types_index_ts"
+    ],
+    "29": [
+      "file_document_icon"
+    ],
+    "30": [
+      "globe_globe_icon"
+    ],
+    "31": [
+      "window_browser_window_icon"
+    ]
+  },
+  "cohesion": {
+    "0": 0.12,
+    "1": 0.1,
+    "2": 0.16,
+    "3": 0.14,
+    "4": 0.2,
+    "5": 0.29,
+    "6": 0.2,
+    "7": 0.39,
+    "8": 0.29,
+    "9": 0.25,
+    "10": 0.33,
+    "11": 0.53,
+    "12": 0.4,
+    "13": 0.4,
+    "14": 0.5,
+    "15": 0.67,
+    "16": 0.5,
+    "17": 1.0,
+    "18": 1.0,
+    "19": 1.0,
+    "20": 1.0,
+    "21": 1.0,
+    "22": 1.0,
+    "23": 1.0,
+    "24": 1.0,
+    "25": 1.0,
+    "26": 1.0,
+    "27": 1.0,
+    "28": 1.0,
+    "29": 1.0,
+    "30": 1.0,
+    "31": 1.0
+  },
+  "gods": [
+    {
+      "id": "supabase_server_createclient",
+      "label": "createClient()",
+      "degree": 20
+    },
+    {
+      "id": "lib_utils_cn",
+      "label": "cn()",
+      "degree": 15
+    },
+    {
+      "id": "ui_badge_badge",
+      "label": "Badge()",
+      "degree": 12
+    },
+    {
+      "id": "queries_dashboard_getdashboardstats",
+      "label": "getDashboardStats()",
+      "degree": 7
+    },
+    {
+      "id": "design_framer_marketing_system",
+      "label": "Framer Marketing Design System",
+      "degree": 7
+    },
+    {
+      "id": "src_middleware_middleware",
+      "label": "middleware()",
+      "degree": 4
+    },
+    {
+      "id": "actions_auth_signup",
+      "label": "signUp()",
+      "degree": 4
+    },
+    {
+      "id": "components_theme_toggle_themetoggle",
+      "label": "ThemeToggle()",
+      "degree": 4
+    },
+    {
+      "id": "lib_utils_formatdate",
+      "label": "formatDate()",
+      "degree": 4
+    },
+    {
+      "id": "readme_nextjs_project",
+      "label": "Next.js Project",
+      "degree": 4
+    }
+  ],
+  "surprises": [
+    {
+      "source": "Next.js Project",
+      "target": "Next.js Wordmark",
+      "source_files": [
+        "priyo-sih/README.md",
+        "priyo-sih/public/next.svg"
+      ],
+      "confidence": "INFERRED",
+      "relation": "conceptually_related_to",
+      "why": "inferred connection - not explicitly stated in source; crosses file types (doc \u2194 image)"
+    },
+    {
+      "source": "Next.js Project",
+      "target": "Vercel Mark",
+      "source_files": [
+        "priyo-sih/README.md",
+        "priyo-sih/public/vercel.svg"
+      ],
+      "confidence": "INFERRED",
+      "relation": "conceptually_related_to",
+      "why": "inferred connection - not explicitly stated in source; crosses file types (doc \u2194 image)"
+    },
+    {
+      "source": "middleware()",
+      "target": "updateSession()",
+      "source_files": [
+        "src/middleware.ts",
+        "src/lib/supabase/middleware.ts"
+      ],
+      "confidence": "INFERRED",
+      "relation": "calls",
+      "why": "inferred connection - not explicitly stated in source"
+    },
+    {
+      "source": "handleSubmit()",
+      "target": "applyToOpportunity()",
+      "source_files": [
+        "src/app/(portal)/opportunities/[id]/apply-button.tsx",
+        "src/actions/applications.ts"
+      ],
+      "confidence": "INFERRED",
+      "relation": "calls",
+      "why": "inferred connection - not explicitly stated in source"
+    },
+    {
+      "source": "signUp()",
+      "target": "createAdminClient()",
+      "source_files": [
+        "src/actions/auth.ts",
+        "src/lib/supabase/server.ts"
+      ],
+      "confidence": "INFERRED",
+      "relation": "calls",
+      "why": "inferred connection - not explicitly stated in source"
+    }
+  ],
+  "questions": [
+    {
+      "type": "bridge_node",
+      "question": "Why does `createClient()` connect `Community 3` to `Community 0`, `Community 2`, `Community 4`, `Community 5`, `Community 7`, `Community 8`, `Community 9`, `Community 10`, `Community 12`, `Community 15`?",
+      "why": "High betweenness centrality (0.381) - this node is a cross-community bridge."
+    },
+    {
+      "type": "bridge_node",
+      "question": "Why does `cn()` connect `Community 1` to `Community 0`, `Community 2`?",
+      "why": "High betweenness centrality (0.151) - this node is a cross-community bridge."
+    },
+    {
+      "type": "bridge_node",
+      "question": "Why does `Badge()` connect `Community 0` to `Community 3`, `Community 5`, `Community 8`, `Community 9`, `Community 15`?",
+      "why": "High betweenness centrality (0.121) - this node is a cross-community bridge."
+    },
+    {
+      "type": "isolated_nodes",
+      "question": "What connects `Dark Canvas`, `GT Walsheim Medium`, `Inter Variable` to the rest of the system?",
+      "why": "17 weakly-connected nodes found - possible documentation gaps or missing edges."
+    },
+    {
+      "type": "low_cohesion",
+      "question": "Should `Community 0` be split into smaller, more focused modules?",
+      "why": "Cohesion score 0.12 - nodes in this community are weakly interconnected."
+    },
+    {
+      "type": "low_cohesion",
+      "question": "Should `Community 1` be split into smaller, more focused modules?",
+      "why": "Cohesion score 0.1 - nodes in this community are weakly interconnected."
+    },
+    {
+      "type": "low_cohesion",
+      "question": "Should `Community 3` be split into smaller, more focused modules?",
+      "why": "Cohesion score 0.14 - nodes in this community are weakly interconnected."
+    }
+  ]
+}
