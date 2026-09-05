@@ -1,0 +1,246 @@
+@import "tailwindcss";
+
+/* ============================================================
+   DESIGN.md Token System → CSS Custom Properties
+   Dark mode = DESIGN.md native. Light mode = derived inverse.
+   ============================================================ */
+
+:root {
+  /* Light mode (derived from DESIGN.md inverse tokens) */
+  --canvas: #ffffff;
+  --surface-1: #f5f5f5;
+  --surface-2: #ebebeb;
+  --hairline: #e0e0e0;
+  --hairline-soft: #eaeaea;
+  --ink: #090909;
+  --ink-muted: #666666;
+  --accent-blue: #0099ff;
+  --gradient-magenta: #d44df0;
+  --gradient-violet: #6a4cf5;
+  --gradient-orange: #ff7a3d;
+  --gradient-coral: #ff5577;
+  --semantic-success: #22c55e;
+  --semantic-error: #ef4444;
+  --semantic-warning: #f59e0b;
+
+  /* Radius tokens (from DESIGN.md) */
+  --radius-xs: 4px;
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 15px;
+  --radius-xl: 20px;
+  --radius-2xl: 30px;
+  --radius-pill: 100px;
+  --radius-full: 9999px;
+
+  /* Spacing tokens (from DESIGN.md — 5px base) */
+  --space-hair: 1px;
+  --space-xxs: 4px;
+  --space-xs: 8px;
+  --space-sm: 12px;
+  --space-md: 15px;
+  --space-lg: 20px;
+  --space-xl: 30px;
+  --space-2xl: 40px;
+  --space-section: 96px;
+}
+
+.dark {
+  /* Dark mode = DESIGN.md native palette */
+  --canvas: #090909;
+  --surface-1: #141414;
+  --surface-2: #1c1c1c;
+  --hairline: #262626;
+  --hairline-soft: #1a1a1a;
+  --ink: #ffffff;
+  --ink-muted: #999999;
+  --accent-blue: #0099ff;
+  --gradient-magenta: #d44df0;
+  --gradient-violet: #6a4cf5;
+  --gradient-orange: #ff7a3d;
+  --gradient-coral: #ff5577;
+  --semantic-success: #22c55e;
+  --semantic-error: #ef4444;
+  --semantic-warning: #f59e0b;
+}
+
+/* ============================================================
+   Tailwind v4 @theme inline — bridge CSS vars to Tailwind
+   ============================================================ */
+@theme inline {
+  --color-canvas: var(--canvas);
+  --color-surface-1: var(--surface-1);
+  --color-surface-2: var(--surface-2);
+  --color-hairline: var(--hairline);
+  --color-hairline-soft: var(--hairline-soft);
+  --color-ink: var(--ink);
+  --color-ink-muted: var(--ink-muted);
+  --color-accent-blue: var(--accent-blue);
+  --color-gradient-magenta: var(--gradient-magenta);
+  --color-gradient-violet: var(--gradient-violet);
+  --color-gradient-orange: var(--gradient-orange);
+  --color-gradient-coral: var(--gradient-coral);
+  --color-semantic-success: var(--semantic-success);
+  --color-semantic-error: var(--semantic-error);
+  --color-semantic-warning: var(--semantic-warning);
+
+  --font-display: "Geist", "Inter", sans-serif;
+  --font-body: "Inter", sans-serif;
+  --font-mono: "Geist Mono", monospace;
+
+  --radius-xs: var(--radius-xs);
+  --radius-sm: var(--radius-sm);
+  --radius-md: var(--radius-md);
+  --radius-lg: var(--radius-lg);
+  --radius-xl: var(--radius-xl);
+  --radius-2xl: var(--radius-2xl);
+  --radius-pill: var(--radius-pill);
+  --radius-full: var(--radius-full);
+}
+
+/* ============================================================
+   Base styles
+   ============================================================ */
+body {
+  background-color: var(--canvas);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-feature-settings: "cv11", "ss03", "ss07";
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ============================================================
+   Typography utility classes (from DESIGN.md)
+   Letter-spacing scales proportionally with font size
+   ============================================================ */
+.text-display-xxl {
+  font-family: var(--font-display);
+  font-size: clamp(48px, 8vw, 110px);
+  font-weight: 500;
+  line-height: 0.85;
+  letter-spacing: -0.05em;
+}
+
+.text-display-xl {
+  font-family: var(--font-display);
+  font-size: clamp(40px, 6vw, 85px);
+  font-weight: 500;
+  line-height: 0.95;
+  letter-spacing: -0.05em;
+}
+
+.text-display-lg {
+  font-family: var(--font-display);
+  font-size: clamp(32px, 4.5vw, 62px);
+  font-weight: 500;
+  line-height: 1.00;
+  letter-spacing: -0.05em;
+}
+
+.text-display-md {
+  font-family: var(--font-display);
+  font-size: clamp(24px, 2.5vw, 32px);
+  font-weight: 500;
+  line-height: 1.13;
+  letter-spacing: -0.031em;
+}
+
+.text-headline {
+  font-family: var(--font-body);
+  font-size: 22px;
+  font-weight: 700;
+  line-height: 1.20;
+  letter-spacing: -0.036em;
+  font-feature-settings: "cv05";
+}
+
+.text-subhead {
+  font-family: var(--font-body);
+  font-size: 24px;
+  font-weight: 400;
+  line-height: 1.30;
+  letter-spacing: -0.0004em;
+  font-feature-settings: "cv11";
+}
+
+.text-body-lg {
+  font-family: var(--font-body);
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 1.30;
+  letter-spacing: -0.01em;
+  font-feature-settings: "cv11";
+}
+
+.text-body {
+  font-family: var(--font-body);
+  font-size: 15px;
+  font-weight: 400;
+  line-height: 1.30;
+  letter-spacing: -0.01em;
+  font-feature-settings: "cv11";
+}
+
+.text-body-sm {
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.40;
+  letter-spacing: -0.01em;
+  font-feature-settings: "cv11";
+}
+
+.text-caption {
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.20;
+  letter-spacing: -0.01em;
+  font-feature-settings: "cv11";
+}
+
+.text-micro {
+  font-family: var(--font-body);
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 1.20;
+  letter-spacing: -0.01em;
+  font-feature-settings: "cv11";
+}
+
+.text-button {
+  font-family: var(--font-body);
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.0;
+  letter-spacing: -0.01em;
+  font-feature-settings: "cv11";
+}
+
+/* ============================================================
+   Scrollbar styling (dark-themed)
+   ============================================================ */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: var(--canvas);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--hairline);
+  border-radius: var(--radius-pill);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--ink-muted);
+}
+
+/* ============================================================
+   Focus ring (DESIGN.md: accent-blue at 15% opacity)
+   ============================================================ */
+*:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 1px rgba(0, 153, 255, 0.15);
+  border-radius: var(--radius-md);
+}
