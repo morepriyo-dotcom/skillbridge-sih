@@ -95,7 +95,7 @@ export function HeroShowcase() {
               {/* Profile Bar */}
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-hairline">
                 <div className="flex items-center gap-3.5">
-                  <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-accent-blue to-gradient-violet flex items-center justify-center text-white font-bold text-headline shadow-inner">
+                  <div className="w-12 h-12 rounded-xl bg-surface-2 border border-hairline flex items-center justify-center text-ink font-bold text-headline">
                     PM
                   </div>
                   <div>
@@ -138,13 +138,13 @@ export function HeroShowcase() {
 
                   <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                     {[
-                      { skill: "Full-Stack React & Next.js", score: "96%", level: "Expert", date: "Verified Sep 2026", color: "from-blue-500/15 to-transparent border-blue-500/30" },
-                      { skill: "Distributed Systems & DB", score: "91%", level: "Advanced", date: "Verified Aug 2026", color: "from-purple-500/15 to-transparent border-purple-500/30" },
-                      { skill: "Cloud Native & DevOps", score: "88%", level: "Proficient", date: "Verified Aug 2026", color: "from-emerald-500/15 to-transparent border-emerald-500/30" },
+                      { skill: "Full-Stack React & Next.js", score: "96%", level: "Expert", date: "Verified Sep 2026" },
+                      { skill: "Distributed Systems & DB", score: "91%", level: "Advanced", date: "Verified Aug 2026" },
+                      { skill: "Cloud Native & DevOps", score: "88%", level: "Proficient", date: "Verified Aug 2026" },
                     ].map((badge) => (
                       <div
                         key={badge.skill}
-                        className={`p-3.5 rounded-xl border bg-gradient-to-b ${badge.color} bg-surface-1 flex flex-col justify-between space-y-2`}
+                        className="p-3.5 rounded-xl border border-hairline bg-surface-1 hover:border-corporate-blue/30 transition-colors flex flex-col justify-between space-y-2"
                       >
                         <div className="flex items-center justify-between">
                           <CheckCircle2 className="w-4 h-4 text-semantic-success" />
@@ -215,7 +215,7 @@ export function HeroShowcase() {
             <div className="space-y-6 animate-in fade-in duration-300">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-hairline">
                 <div className="flex items-center gap-3.5">
-                  <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-amber-500 to-orange-500 flex items-center justify-center text-white font-bold text-headline shadow-inner">
+                  <div className="w-12 h-12 rounded-xl bg-surface-2 border border-hairline flex items-center justify-center text-ink font-bold text-headline">
                     AS
                   </div>
                   <div>
@@ -320,7 +320,7 @@ export function HeroShowcase() {
             <div className="space-y-6 animate-in fade-in duration-300">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-hairline">
                 <div className="flex items-center gap-3.5">
-                  <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-emerald-500 to-teal-400 flex items-center justify-center text-white font-bold text-headline shadow-inner">
+                  <div className="w-12 h-12 rounded-xl bg-surface-2 border border-hairline flex items-center justify-center text-ink font-bold text-headline">
                     TCS
                   </div>
                   <div>
@@ -433,7 +433,7 @@ export function HeroShowcase() {
             <div className="space-y-6 animate-in fade-in duration-300">
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-hairline">
                 <div className="flex items-center gap-3.5">
-                  <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-purple-500 to-indigo-500 flex items-center justify-center text-white font-bold text-headline shadow-inner">
+                  <div className="w-12 h-12 rounded-xl bg-surface-2 border border-hairline flex items-center justify-center text-ink font-bold text-headline">
                     NIT
                   </div>
                   <div>

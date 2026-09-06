@@ -261,7 +261,7 @@ export function InteractiveAssessmentDemo() {
                     <RefreshCw className="w-3.5 h-3.5" /> Try Another
                   </Button>
                   <span className="text-body-sm text-ink-muted">
-                    {isCorrect ? "🎉 Exceptional analysis!" : "💡 Good attempt! Real assessments provide full diagnostic insights."}
+                    {isCorrect ? "Exceptional analysis. Performance matches verified standards." : "Good attempt. Diagnostic benchmarks evaluated."}
                   </span>
                 </div>
               )}
@@ -270,11 +270,11 @@ export function InteractiveAssessmentDemo() {
 
           {/* Generated Verified Badge Result Card */}
           {isSubmitted && (
-            <div className="p-6 rounded-2xl bg-gradient-to-r from-accent-blue/15 via-gradient-violet/10 to-surface-1 border border-accent-blue/40 animate-in fade-in zoom-in-95 duration-300">
+            <div className="p-6 rounded-xl bg-surface-1 border border-accent-blue/40 animate-in fade-in zoom-in-95 duration-300">
               <div className="flex flex-col sm:flex-row items-center justify-between gap-6">
                 <div className="flex items-center gap-4">
-                  <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-accent-blue to-gradient-violet flex items-center justify-center text-white shadow-lg">
-                    <Award className="w-8 h-8" />
+                  <div className="w-14 h-14 rounded-xl bg-surface-2 border border-hairline flex items-center justify-center text-accent-blue shadow-xs">
+                    <Award className="w-7 h-7" />
                   </div>
                   <div>
                     <div className="flex items-center gap-2">

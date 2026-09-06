@@ -52,21 +52,13 @@ export function SkillBridgeLogo({
 
   const content = (
     <div className={cn("inline-flex items-center group select-none cursor-pointer", sizeMap.gap, className)}>
-      {/* World-Class Emblem Container */}
+      {/* Corporate Emblem Container */}
       <div className="relative">
-        {/* Ambient Hover Glow behind icon */}
-        <div
-          className={cn(
-            "absolute -inset-1 rounded-xl bg-gradient-to-r from-gradient-violet via-accent-blue to-gradient-magenta opacity-30 blur-sm transition-all duration-300 group-hover:opacity-75 group-hover:scale-105"
-          )}
-          aria-hidden="true"
-        />
-
         {/* Icon Squircle Badge */}
         <div
           className={cn(
             sizeMap.box,
-            "relative flex items-center justify-center bg-gradient-to-b from-surface-1 via-surface-1 to-surface-2 dark:from-[#181a24] dark:via-[#12131b] dark:to-[#0c0d12] border border-hairline/80 dark:border-white/10 shadow-sm transition-transform duration-200 group-hover:scale-[1.04]"
+            "relative flex items-center justify-center bg-surface-1 border border-hairline shadow-xs transition-transform duration-200 group-hover:scale-[1.02]"
           )}
         >
           <svg
@@ -78,28 +70,14 @@ export function SkillBridgeLogo({
             className="overflow-visible"
           >
             <defs>
-              {/* Foundation Gradient */}
               <linearGradient id="sb-bridge-span" x1="5" y1="26" x2="31" y2="26" gradientUnits="userSpaceOnUse">
-                <stop offset="0%" stopColor="#6A4CF5" stopOpacity="0.5" />
-                <stop offset="50%" stopColor="#0099FF" stopOpacity="1" />
-                <stop offset="100%" stopColor="#00F2FE" stopOpacity="0.5" />
+                <stop offset="0%" stopColor="#2563eb" stopOpacity="0.7" />
+                <stop offset="100%" stopColor="#3b82f6" stopOpacity="0.9" />
               </linearGradient>
-
-              {/* Ascent / Trajectory Gradient */}
               <linearGradient id="sb-flight-path" x1="6" y1="23" x2="28" y2="6" gradientUnits="userSpaceOnUse">
-                <stop offset="0%" stopColor="#6A4CF5" />
-                <stop offset="60%" stopColor="#0099FF" />
-                <stop offset="100%" stopColor="#00F2FE" />
+                <stop offset="0%" stopColor="#2563eb" />
+                <stop offset="100%" stopColor="#3b82f6" />
               </linearGradient>
-
-              {/* Apex Glow Filter */}
-              <filter id="sb-star-glow" x="-40%" y="-40%" width="180%" height="180%">
-                <feGaussianBlur stdDeviation="1.2" result="blur" />
-                <feMerge>
-                  <feMergeNode in="blur" />
-                  <feMergeNode in="SourceGraphic" />
-                </feMerge>
-              </filter>
             </defs>
 
             {/* Ground / Foundation Bridge Arch */}
@@ -110,12 +88,12 @@ export function SkillBridgeLogo({
               strokeLinecap="round"
             />
 
-            {/* Neural Skill Verticals / Bridge Cables (Interconnecting Academics & Industry) */}
-            <line x1="11.5" y1="18.5" x2="11.5" y2="24" stroke="#6A4CF5" strokeWidth="1.5" strokeLinecap="round" opacity="0.6" />
-            <line x1="18" y1="16" x2="18" y2="22.5" stroke="#0099FF" strokeWidth="2" strokeLinecap="round" opacity="0.9" />
-            <line x1="24.5" y1="18.5" x2="24.5" y2="24" stroke="#00F2FE" strokeWidth="1.5" strokeLinecap="round" opacity="0.6" />
+            {/* Bridge Verticals */}
+            <line x1="11.5" y1="18.5" x2="11.5" y2="24" stroke="#2563eb" strokeWidth="1.5" strokeLinecap="round" opacity="0.6" />
+            <line x1="18" y1="16" x2="18" y2="22.5" stroke="#3b82f6" strokeWidth="2" strokeLinecap="round" opacity="0.9" />
+            <line x1="24.5" y1="18.5" x2="24.5" y2="24" stroke="#60a5fa" strokeWidth="1.5" strokeLinecap="round" opacity="0.6" />
 
-            {/* Ascending Flight Arc: Campus to Corporate Trajectory */}
+            {/* Ascending Flight Arc */}
             <path
               d="M 6.5 22 C 10.5 14, 15 7, 26 7"
               stroke="url(#sb-flight-path)"
@@ -124,13 +102,12 @@ export function SkillBridgeLogo({
             />
 
             {/* Student Foundation Origin Node */}
-            <circle cx="6.5" cy="22" r="2" fill="#6A4CF5" />
+            <circle cx="6.5" cy="22" r="2" fill="#2563eb" />
 
-            {/* North Star / Achievement Spark at Summit (Corporate Placement & Verified Mastery) */}
+            {/* North Star Apex */}
             <path
               d="M 26 7 L 27.2 3.2 L 28.4 7 L 32.2 8.2 L 28.4 9.4 L 27.2 13.2 L 26 9.4 L 22.2 8.2 Z"
-              fill="#00F2FE"
-              filter="url(#sb-star-glow)"
+              fill="#3b82f6"
             />
             <circle cx="27.2" cy="8.2" r="1.1" fill="#FFFFFF" />
           </svg>
@@ -141,11 +118,8 @@ export function SkillBridgeLogo({
       {showWordmark && (
         <div className="flex flex-col">
           <div className="flex items-center gap-1.5 leading-none">
-            <span className={cn("font-black text-ink transition-colors", sizeMap.title)}>
-              Skill
-              <span className="bg-gradient-to-r from-accent-blue via-[#5a48ef] to-gradient-violet bg-clip-text text-transparent">
-                Bridge
-              </span>
+            <span className={cn("font-bold text-ink tracking-tight transition-colors", sizeMap.title)}>
+              Skill<span className="text-accent-blue font-extrabold">Bridge</span>
             </span>
 
             {showBadge && (

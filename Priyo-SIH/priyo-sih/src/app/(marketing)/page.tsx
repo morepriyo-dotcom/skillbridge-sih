@@ -31,10 +31,6 @@ export const metadata = {
 export default function MarketingPage() {
   return (
     <div className="min-h-screen bg-canvas text-ink relative overflow-hidden">
-      {/* Background Ambient Radial Glow Mesh */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[600px] bg-gradient-to-b from-gradient-violet/20 via-accent-blue/10 to-transparent blur-[140px] pointer-events-none -z-10"></div>
-      <div className="absolute top-[800px] right-[-200px] w-[600px] h-[600px] bg-gradient-magenta/10 blur-[160px] pointer-events-none -z-10"></div>
-
       {/* Hero Section */}
       <section className="pt-20 pb-16 px-4 sm:px-6 lg:px-8 text-center max-w-5xl mx-auto relative">
         <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-pill bg-surface-1 border border-hairline mb-8 shadow-xs hover:border-hairline-strong transition-all">
@@ -45,7 +41,7 @@ export default function MarketingPage() {
 
         <h1 className="text-display-xl font-bold tracking-tight leading-[1.05] text-ink max-w-4xl mx-auto">
           Bridging Campus to Corporate.{" "}
-          <span className="bg-gradient-to-r from-gradient-violet via-accent-blue to-teal-400 bg-clip-text text-transparent">
+          <span className="text-accent-blue">
             With Cryptographically Verified Skills.
           </span>
         </h1>
@@ -194,12 +190,9 @@ export default function MarketingPage() {
       {/* FAQ Accordion Section */}
       <FAQAccordion />
 
-      {/* High-Impact Atmospheric Call to Action (CTA) */}
+      {/* High-Impact Enterprise Call to Action (CTA) */}
       <section className="py-24 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto">
-        <div className="rounded-3xl border border-hairline p-8 sm:p-14 text-center bg-gradient-to-b from-surface-2 via-surface-1 to-canvas shadow-2xl relative overflow-hidden space-y-8">
-          {/* Ambient Glow */}
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-80 h-80 bg-gradient-violet/20 blur-[100px] pointer-events-none"></div>
-
+        <div className="rounded-2xl border border-hairline p-8 sm:p-14 text-center bg-surface-1 shadow-md relative overflow-hidden space-y-8">
           <div className="relative z-10 space-y-4 max-w-2xl mx-auto">
             <Badge variant="accent" className="text-body-sm px-4 py-1 rounded-pill">
               Join the National Skill Network

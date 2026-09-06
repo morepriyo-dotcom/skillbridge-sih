@@ -91,15 +91,15 @@ export const OPPORTUNITY_TYPES = {
 } as const;
 
 export const APPLICATION_STATUSES = {
-  applied: { label: "Applied", color: "bg-accent-blue/20 text-accent-blue" },
-  under_review: { label: "Under Review", color: "bg-semantic-warning/20 text-semantic-warning" },
-  shortlisted: { label: "Shortlisted", color: "bg-gradient-violet/20 text-gradient-violet" },
-  assessment: { label: "Assessment", color: "bg-gradient-orange/20 text-gradient-orange" },
-  interview_scheduled: { label: "Interview", color: "bg-gradient-magenta/20 text-gradient-magenta" },
-  offered: { label: "Offered", color: "bg-semantic-success/20 text-semantic-success" },
-  rejected: { label: "Rejected", color: "bg-semantic-error/20 text-semantic-error" },
-  hired: { label: "Hired", color: "bg-semantic-success/20 text-semantic-success" },
-  completed: { label: "Completed", color: "bg-ink-muted/20 text-ink-muted" },
+  applied: { label: "Applied", color: "bg-blue-500/10 text-blue-400 border border-blue-500/20" },
+  under_review: { label: "Under Review", color: "bg-amber-500/10 text-amber-400 border border-amber-500/20" },
+  shortlisted: { label: "Shortlisted", color: "bg-indigo-500/10 text-indigo-300 border border-indigo-500/20" },
+  assessment: { label: "Assessment", color: "bg-sky-500/10 text-sky-400 border border-sky-500/20" },
+  interview_scheduled: { label: "Interview", color: "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20" },
+  offered: { label: "Offered", color: "bg-emerald-500/15 text-emerald-300 border border-emerald-500/30" },
+  rejected: { label: "Rejected", color: "bg-rose-500/10 text-rose-400 border border-rose-500/20" },
+  hired: { label: "Hired", color: "bg-emerald-500/20 text-emerald-300 border border-emerald-500/30" },
+  completed: { label: "Completed", color: "bg-zinc-700/20 text-zinc-300 border border-zinc-700/30" },
 } as const;
 
 export const PROFICIENCY_LEVELS = {

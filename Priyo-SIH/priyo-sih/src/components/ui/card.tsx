@@ -9,9 +9,11 @@ const cardVariants = cva(
       variant: {
         default: "bg-surface-1 text-ink rounded-xl p-6",
         featured: "bg-surface-2 text-ink rounded-xl p-6",
-        "gradient-violet": "bg-gradient-violet text-white rounded-2xl p-8",
-        "gradient-magenta": "bg-gradient-magenta text-white rounded-2xl p-8",
-        "gradient-orange": "bg-gradient-orange text-white rounded-2xl p-8",
+        corporate: "bg-surface-1 border border-hairline text-ink rounded-xl p-6 shadow-xs",
+        subtle: "bg-surface-2 border border-hairline text-ink rounded-xl p-6",
+        "gradient-violet": "bg-surface-1 border border-blue-500/30 text-ink rounded-xl p-6",
+        "gradient-magenta": "bg-surface-1 border border-hairline text-ink rounded-xl p-6",
+        "gradient-orange": "bg-surface-1 border border-hairline text-ink rounded-xl p-6",
       },
     },
     defaultVariants: {

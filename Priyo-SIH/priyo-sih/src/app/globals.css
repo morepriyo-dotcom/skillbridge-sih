@@ -14,22 +14,25 @@
   --hairline-soft: #eaeaea;
   --ink: #090909;
   --ink-muted: #666666;
-  --accent-blue: #0099ff;
-  --gradient-magenta: #d44df0;
-  --gradient-violet: #6a4cf5;
-  --gradient-orange: #ff7a3d;
-  --gradient-coral: #ff5577;
-  --semantic-success: #22c55e;
-  --semantic-error: #ef4444;
-  --semantic-warning: #f59e0b;
+  --accent-blue: #2563eb;
+  --gradient-magenta: #4f46e5;
+  --gradient-violet: #2563eb;
+  --gradient-orange: #0284c7;
+  --gradient-coral: #475569;
+  --corporate-blue: #2563eb;
+  --corporate-slate: #475569;
+  --corporate-zinc: #52525b;
+  --semantic-success: #16a34a;
+  --semantic-error: #dc2626;
+  --semantic-warning: #d97706;
 
   /* Radius tokens (from DESIGN.md) */
   --radius-xs: 4px;
   --radius-sm: 6px;
-  --radius-md: 10px;
-  --radius-lg: 15px;
-  --radius-xl: 20px;
-  --radius-2xl: 30px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+  --radius-2xl: 20px;
   --radius-pill: 100px;
   --radius-full: 9999px;
 
@@ -46,19 +49,22 @@
 }
 
 .dark {
-  /* Dark mode = DESIGN.md native palette */
-  --canvas: #090909;
-  --surface-1: #141414;
-  --surface-2: #1c1c1c;
-  --hairline: #262626;
-  --hairline-soft: #1a1a1a;
-  --ink: #ffffff;
-  --ink-muted: #999999;
-  --accent-blue: #0099ff;
-  --gradient-magenta: #d44df0;
-  --gradient-violet: #6a4cf5;
-  --gradient-orange: #ff7a3d;
-  --gradient-coral: #ff5577;
+  /* Dark mode = Enterprise AWS / Apple Developer palette */
+  --canvas: #09090b;
+  --surface-1: #121214;
+  --surface-2: #18181b;
+  --hairline: #27272a;
+  --hairline-soft: #1f1f23;
+  --ink: #f4f4f5;
+  --ink-muted: #a1a1aa;
+  --accent-blue: #3b82f6;
+  --gradient-magenta: #6366f1;
+  --gradient-violet: #3b82f6;
+  --gradient-orange: #38bdf8;
+  --gradient-coral: #64748b;
+  --corporate-blue: #3b82f6;
+  --corporate-slate: #64748b;
+  --corporate-zinc: #71717a;
   --semantic-success: #22c55e;
   --semantic-error: #ef4444;
   --semantic-warning: #f59e0b;

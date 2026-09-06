@@ -1,4 +1,5 @@
 import { createClient, createAdminClient, getCachedProfile, getCachedUser } from "@/lib/supabase/server";
+import { getStudentCareerGoals } from "@/queries/profile";
 
 /**
  * Get the current user's profile with role-specific details.
@@ -64,7 +65,7 @@ async function getStudentDashboard(
   userId: string
 ) {
   try {
-    const [applications, skills, assessments] = await Promise.all([
+    const [applications, skills, assessments, studentDetails, careerGoals] = await Promise.all([
       supabase
         .from("applications")
         .select(
@@ -74,25 +75,39 @@ async function getStudentDashboard(
         )
         .eq("applicant_id", userId)
         .order("created_at", { ascending: false })
-        .limit(5),
+        .limit(6),
       supabase
         .from("user_skills")
-        .select("id, verified", { count: "exact" })
+        .select("id, skill_name, proficiency_level, verified", { count: "exact" })
         .eq("user_id", userId),
       supabase
         .from("assessment_submissions")
-        .select("id", { count: "exact" })
-        .eq("user_id", userId),
+        .select(
+          `id, score_percentage, passed, created_at,
+           assessment:skill_assessments(title, category)`,
+          { count: "exact" }
+        )
+        .eq("user_id", userId)
+        .order("created_at", { ascending: false })
+        .limit(5),
+      supabase
+        .from("student_details")
+        .select("degree, department, cgpa, graduation_year, institution:institutions(name, code)")
+        .eq("user_id", userId)
+        .maybeSingle(),
+      getStudentCareerGoals(userId),
     ]);
 
     const matchScores = (applications.data || [])
       .map((a: any) => a.match_score)
       .filter((s): s is number => s !== null && s !== undefined);
 
+    const verifiedSkillsList = (skills.data || []).filter((s: any) => s.verified);
+
     return {
       role: "student" as const,
       totalApplications: applications.count || 0,
-      skillsVerified: (skills.data || []).filter((s: any) => s.verified).length,
+      skillsVerified: verifiedSkillsList.length,
       totalSkills: skills.count || 0,
       assessmentsCompleted: assessments.count || 0,
       matchScoreAvg:
@@ -102,8 +117,16 @@ async function getStudentDashboard(
             )
           : 0,
       recentApplications: applications.data || [],
+      skillsList: skills.data || [],
+      recentAssessments: assessments.data || [],
+      studentDetails: studentDetails?.data || null,
+      careerGoals: careerGoals || {
+        desired_role: "Full Stack Software Developer",
+        desired_sector: "Information Technology",
+      },
     };
-  } catch {
+  } catch (err) {
+    console.error("Error in getStudentDashboard:", err);
     return {
       role: "student" as const,
       totalApplications: 0,
@@ -112,6 +135,13 @@ async function getStudentDashboard(
       assessmentsCompleted: 0,
       matchScoreAvg: 0,
       recentApplications: [],
+      skillsList: [],
+      recentAssessments: [],
+      studentDetails: null,
+      careerGoals: {
+        desired_role: "Full Stack Software Developer",
+        desired_sector: "Information Technology",
+      },
     };
   }
 }

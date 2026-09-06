@@ -1243,7 +1243,7 @@ export function AssessmentManager({
 
                   {q.explanation && (
                     <div className="text-micro text-ink-muted italic bg-surface-1 p-2 rounded border border-hairline">
-                      💡 Reason: {q.explanation}
+                      Explanation: {q.explanation}
                     </div>
                   )}
                 </div>
