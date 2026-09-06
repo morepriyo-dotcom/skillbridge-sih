@@ -6,6 +6,7 @@ import { usePathname } from 'next/navigation';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { ROLE_NAV_ITEMS } from '@/lib/constants';
+import { SkillBridgeLogo } from '@/components/ui/skillbridge-logo';
 import {
   LogOut,
   LayoutDashboard,
@@ -109,13 +110,13 @@ export function PortalSidebar({ role, userName }: { role: string; userName: stri
       )}
     >
       {/* Sidebar Header */}
-      <div className="h-[56px] flex items-center justify-between px-4 border-b border-hairline">
+      <div className="h-[56px] flex items-center justify-between px-3 border-b border-hairline">
         {!collapsed ? (
-          <Link href="/" className="text-ink font-bold text-headline tracking-tighter truncate flex items-center space-x-2">
-            <span>SkillBridge</span>
-          </Link>
+          <SkillBridgeLogo size="sm" showTagline={false} showBadge={false} />
         ) : (
-          <span className="font-bold text-ink text-headline mx-auto">SB</span>
+          <div className="mx-auto">
+            <SkillBridgeLogo size="sm" showWordmark={false} href={null} />
+          </div>
         )}
         <button
           onClick={() => setCollapsed(!collapsed)}

@@ -1,6 +1,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { ThemeToggle } from '@/components/theme-toggle';
+import { SkillBridgeLogo } from '@/components/ui/skillbridge-logo';
 
 export default function AuthLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -10,9 +11,7 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
       </div>
       <div className="w-full max-w-md">
         <div className="flex justify-center mb-8">
-          <Link href="/" className="text-ink font-bold text-headline tracking-tighter">
-            SkillBridge
-          </Link>
+          <SkillBridgeLogo size="lg" />
         </div>
         <div className="bg-surface-1 rounded-xl p-8 shadow-lg border border-hairline">
           {children}

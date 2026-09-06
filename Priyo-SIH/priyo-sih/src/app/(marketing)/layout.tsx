@@ -1,6 +1,7 @@
 import React from 'react';
 import Link from 'next/link';
 import { MarketingNavbar } from '@/components/marketing/navbar';
+import { SkillBridgeLogo } from '@/components/ui/skillbridge-logo';
 
 export default function MarketingLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -49,8 +50,8 @@ export default function MarketingLayout({ children }: { children: React.ReactNod
             </ul>
           </div>
         </div>
-        <div className="max-w-7xl mx-auto mt-16 pt-8 border-t border-hairline flex flex-col md:flex-row items-center justify-between">
-          <span className="text-headline text-ink font-bold tracking-tighter mb-4 md:mb-0">SkillBridge</span>
+        <div className="max-w-7xl mx-auto mt-16 pt-8 border-t border-hairline flex flex-col md:flex-row items-center justify-between gap-4">
+          <SkillBridgeLogo size="sm" showBadge={false} />
           <span className="text-caption text-ink-muted">&copy; {new Date().getFullYear()} SkillBridge. All rights reserved.</span>
         </div>
       </footer>
