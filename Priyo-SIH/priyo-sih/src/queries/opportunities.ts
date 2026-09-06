@@ -1,4 +1,4 @@
-import { createClient } from "@/lib/supabase/server";
+import { createClient, getCachedUser } from "@/lib/supabase/server";
 import type { OpportunityFilters } from "@/types";
 
 async function resolveSkillUUIDsToNames(
@@ -121,13 +121,10 @@ export async function getOpportunityById(id: string) {
  */
 export async function getMyOpportunities() {
   try {
-    const supabase = await createClient();
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-
+    const user = await getCachedUser();
     if (!user) return [];
 
+    const supabase = await createClient();
     const { data, error } = await supabase
       .from("opportunities")
       .select(
@@ -146,7 +143,8 @@ export async function getMyOpportunities() {
     }
 
     return data || [];
-  } catch (err) {
+  } catch (err: any) {
+    if (err?.digest === 'DYNAMIC_SERVER_USAGE') throw err;
     console.error("Unexpected error in getMyOpportunities:", err);
     return [];
   }

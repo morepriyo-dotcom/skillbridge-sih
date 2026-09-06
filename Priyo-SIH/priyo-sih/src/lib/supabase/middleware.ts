@@ -8,6 +8,16 @@ import { type NextRequest, NextResponse } from "next/server";
 export async function updateSession(request: NextRequest) {
   let supabaseResponse = NextResponse.next({ request });
 
+  // Fast path: if there are no Supabase auth cookies present, skip remote network call.
+  // This saves 200-500ms of latency on every unauthenticated page view, asset load, and prefetch.
+  const hasAuthCookie = request.cookies
+    .getAll()
+    .some((c) => c.name.startsWith("sb-") && c.name.includes("-auth-token"));
+
+  if (!hasAuthCookie) {
+    return { supabase: null, user: null, response: supabaseResponse };
+  }
+
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,

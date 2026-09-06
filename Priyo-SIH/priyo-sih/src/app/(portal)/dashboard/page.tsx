@@ -16,15 +16,11 @@ import {
 import { IndustryApplicationsList } from './industry-applications-list';
 
 export default async function DashboardPage() {
-  const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const profile = await getProfile();
 
-  if (!user) redirect('/login');
+  if (!profile) redirect('/login');
 
-  const [profile, stats] = await Promise.all([
-    getProfile(),
-    getDashboardStats()
-  ]);
+  const stats = await getDashboardStats();
 
   if (!stats || !profile) {
     return (

@@ -1,16 +1,14 @@
-import { createClient } from "@/lib/supabase/server";
+import { createClient, getCachedUser } from "@/lib/supabase/server";
 
 /**
  * Get applications for the current user (student view).
  */
 export async function getMyApplications() {
   try {
-    const supabase = await createClient();
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-
+    const user = await getCachedUser();
     if (!user) return [];
+
+    const supabase = await createClient();
 
     const { data, error } = await supabase
       .from("applications")
@@ -77,12 +75,10 @@ export async function getApplicantsForOpportunity(opportunityId: string) {
  */
 export async function getAllMyApplicants() {
   try {
-    const supabase = await createClient();
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-
+    const user = await getCachedUser();
     if (!user) return [];
+
+    const supabase = await createClient();
 
     // Get this user's opportunity IDs
     const { data: myOpps, error: oppsError } = await supabase

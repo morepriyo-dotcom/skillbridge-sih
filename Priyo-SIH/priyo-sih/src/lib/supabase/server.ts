@@ -34,6 +34,8 @@ export async function createClient() {
   );
 }
 
+import { cache } from "react";
+
 /**
  * Admin client with service role key.
  * ONLY use in trusted Server Actions for admin operations.
@@ -51,3 +53,53 @@ export async function createAdminClient() {
     }
   );
 }
+
+/**
+ * Request-scoped cached user getter.
+ * Deduplicates auth.getUser() calls across Server Components, layouts, and queries
+ * within a single request render tree.
+ */
+export const getCachedUser = cache(async () => {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  return user || null;
+});
+
+/**
+ * Request-scoped cached profile getter.
+ * Deduplicates profiles table queries across layouts, pages, and queries.
+ */
+export const getCachedProfile = cache(async () => {
+  const user = await getCachedUser();
+  if (!user) return null;
+
+  const admin = await createAdminClient();
+  const { data: profile } = await admin
+    .from("profiles")
+    .select("id, full_name, email, role, avatar_url, bio, phone")
+    .eq("id", user.id)
+    .maybeSingle();
+
+  const metaRole = user.user_metadata?.role;
+  const metaName =
+    user.user_metadata?.full_name || user.email?.split("@")[0] || "User";
+
+  let effectiveRole = profile?.role || metaRole || "student";
+  if (metaRole === "academician" || profile?.role === "academician") {
+    effectiveRole = "academician";
+  } else if (metaRole && profile?.role === "student" && metaRole !== "student") {
+    effectiveRole = metaRole;
+  }
+
+  return {
+    id: user.id,
+    email: user.email || "",
+    role: effectiveRole,
+    full_name: profile?.full_name || metaName,
+    avatar_url: profile?.avatar_url || user.user_metadata?.avatar_url || null,
+    bio: profile?.bio || null,
+    phone: profile?.phone || null,
+  };
+});

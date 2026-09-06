@@ -1,14 +1,10 @@
-import { createClient, createAdminClient } from "@/lib/supabase/server";
+import { createAdminClient, getCachedUser, getCachedProfile } from "@/lib/supabase/server";
 
 /**
  * Get mentorship sessions for the current user (as mentor or mentee).
  */
 export async function getMyMentorshipSessions() {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
+  const user = await getCachedUser();
   if (!user) return [];
 
   const admin = await createAdminClient();
@@ -72,27 +68,18 @@ export async function getStudentsList() {
  * Get current user profile and academician consultancy status.
  */
 export async function getCurrentMentorshipProfile() {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  if (!user) return null;
+  const profile = await getCachedProfile();
+  if (!profile) return null;
 
   const admin = await createAdminClient();
-  const [{ data: profile }, { data: academicianDetails }] = await Promise.all([
-    admin.from("profiles").select("id, full_name, email, role, avatar_url").eq("id", user.id).maybeSingle(),
-    admin.from("academician_details").select("*").eq("user_id", user.id).maybeSingle(),
-  ]);
+  const { data: academicianDetails } = await admin
+    .from("academician_details")
+    .select("*")
+    .eq("user_id", profile.id)
+    .maybeSingle();
 
   return {
-    user: profile || {
-      id: user.id,
-      email: user.email || "",
-      role: "academician",
-      full_name: (user.user_metadata?.full_name as string) || "User",
-      avatar_url: null,
-    },
+    user: profile,
     academicianDetails: academicianDetails || null,
   };
 }

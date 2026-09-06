@@ -1,135 +1,61 @@
-import { createClient } from "@/lib/supabase/server";
+import { createClient, createAdminClient, getCachedProfile, getCachedUser } from "@/lib/supabase/server";
 
 /**
  * Get the current user's profile with role-specific details.
- * Falls back gracefully to user_metadata if profile row is pending.
+ * Uses request-cached profile to eliminate duplicate queries.
  */
 export async function getProfile() {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  if (!user) return null;
+  const profile = await getCachedProfile();
+  if (!profile) return null;
 
   try {
-    const { data: profile } = await supabase
-      .from("profiles")
-      .select("*")
-      .eq("id", user.id)
-      .maybeSingle();
-
-    if (profile) {
-      if (
-        user.user_metadata?.role === "academician" ||
-        profile.role === "academician"
-      ) {
-        profile.role = "academician";
-      } else if (
-        profile.role === "student" &&
-        user.user_metadata?.role &&
-        user.user_metadata.role !== "student"
-      ) {
-        profile.role = user.user_metadata.role;
-      }
-      let details = null;
-      try {
-        if (profile.role === "student") {
-          const { data } = await supabase
-            .from("student_details")
-            .select("*, institution:institutions(name, code)")
-            .eq("user_id", user.id)
-            .maybeSingle();
-          details = data;
-        } else if (profile.role === "academician") {
-          const { data } = await supabase
-            .from("academician_details")
-            .select("*, institution:institutions(name, code)")
-            .eq("user_id", user.id)
-            .maybeSingle();
-          details = data;
-        }
-      } catch {
-        // Table or row not available yet
-      }
-
-      return { ...profile, details };
+    const admin = await createAdminClient();
+    let details = null;
+    if (profile.role === "student") {
+      const { data } = await admin
+        .from("student_details")
+        .select("*, institution:institutions(name, code)")
+        .eq("user_id", profile.id)
+        .maybeSingle();
+      details = data;
+    } else if (profile.role === "academician") {
+      const { data } = await admin
+        .from("academician_details")
+        .select("*, institution:institutions(name, code)")
+        .eq("user_id", profile.id)
+        .maybeSingle();
+      details = data;
     }
+    return { ...profile, details };
   } catch {
-    // Database query failed
+    return { ...profile, details: null };
   }
-
-  // Graceful fallback from auth metadata
-  return {
-    id: user.id,
-    full_name:
-      user.user_metadata?.full_name ||
-      user.email?.split("@")[0] ||
-      "User",
-    role: user.user_metadata?.role || "student",
-    email: user.email,
-    avatar_url: user.user_metadata?.avatar_url || null,
-    details: null,
-  };
 }
 
 /**
  * Get dashboard statistics based on user role.
  * Returns typed stats for each role with zero-value fallbacks.
+ * Uses cached profile to avoid redundant auth/profile network round-trips.
  */
 export async function getDashboardStats() {
+  const profile = await getCachedProfile();
+  if (!profile) return null;
+
   const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
 
-  if (!user) return null;
-
-  let role = user.user_metadata?.role || "student";
-  try {
-    const { data: profile } = await supabase
-      .from("profiles")
-      .select("role")
-      .eq("id", user.id)
-      .maybeSingle();
-
-    if (profile?.role) {
-      if (
-        profile.role === "academician" ||
-        user.user_metadata?.role === "academician"
-      ) {
-        role = "academician";
-      } else if (
-        profile.role === "student" &&
-        user.user_metadata?.role &&
-        user.user_metadata.role !== "student"
-      ) {
-        role = user.user_metadata.role;
-      } else {
-        role = profile.role;
-      }
-    } else if (user.user_metadata?.role) {
-      role = user.user_metadata.role;
-    }
-  } catch {
-    if (user.user_metadata?.role) {
-      role = user.user_metadata.role;
-    }
-  }
-
-  switch (role) {
+  switch (profile.role) {
     case "student":
-      return getStudentDashboard(supabase, user.id);
+      return getStudentDashboard(supabase, profile.id);
     case "academician":
-      return getAcademicianDashboard(supabase, user.id);
+      return getAcademicianDashboard(supabase, profile.id);
     case "industry_partner":
-      return getIndustryDashboard(supabase, user.id);
+      return getIndustryDashboard(supabase, profile.id);
     case "institution_admin":
-      return getInstitutionDashboard(supabase, user.id);
+      return getInstitutionDashboard(supabase, profile.id);
     case "super_admin":
       return getAdminDashboard(supabase);
     default:
-      return getStudentDashboard(supabase, user.id);
+      return getStudentDashboard(supabase, profile.id);
   }
 }
 
@@ -311,19 +237,15 @@ async function getInstitutionDashboard(
   _userId: string
 ) {
   try {
-    const { count: studentCount } = await supabase
-      .from("student_details")
-      .select("id", { count: "exact", head: true });
+    const [studentsRes, placedRes, drivesRes] = await Promise.all([
+      supabase.from("student_details").select("id", { count: "exact", head: true }),
+      supabase.from("applications").select("id", { count: "exact", head: true }).eq("status", "hired"),
+      supabase.from("opportunities").select("id", { count: "exact", head: true }).eq("status", "active"),
+    ]);
 
-    const { count: placedCount } = await supabase
-      .from("applications")
-      .select("id", { count: "exact", head: true })
-      .eq("status", "hired");
-
-    const { count: activeDriveCount } = await supabase
-      .from("opportunities")
-      .select("id", { count: "exact", head: true })
-      .eq("status", "active");
+    const studentCount = studentsRes.count;
+    const placedCount = placedRes.count;
+    const activeDriveCount = drivesRes.count;
 
     return {
       role: "institution_admin" as const,
