@@ -3,6 +3,7 @@
 import { createClient, createAdminClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
+import { headers } from "next/headers";
 import type { UserRole } from "@/types";
 import {
   loginSchema,
@@ -20,6 +21,7 @@ import type {
 export type AuthActionResult = {
   error?: string;
   success?: boolean;
+  directRecoveryLink?: string;
 };
 
 /**
@@ -336,7 +338,7 @@ export async function signOut(): Promise<void> {
 }
 
 /**
- * Send a password reset email.
+ * Send a password reset email and generate a reliable recovery link.
  */
 export async function forgotPassword(
   input: ForgotPasswordInput
@@ -346,20 +348,82 @@ export async function forgotPassword(
     return { error: parsed.error.errors[0].message };
   }
 
-  const supabase = await createClient();
+  const cleanEmail = parsed.data.email.trim().toLowerCase();
 
-  const { error } = await supabase.auth.resetPasswordForEmail(
-    parsed.data.email,
+  // 1. Verify that the user exists in the system before triggering recovery
+  try {
+    const admin = await createAdminClient();
+    const { data: userList, error: listErr } = await admin.auth.admin.listUsers();
+    if (!listErr && userList?.users) {
+      const userExists = userList.users.some(
+        (u) => u.email?.toLowerCase() === cleanEmail
+      );
+      if (!userExists) {
+        return {
+          error: `No registered account found with "${cleanEmail}". Please verify your email address or create an account.`,
+        };
+      }
+    }
+  } catch (checkErr) {
+    console.warn("User pre-check warning:", checkErr);
+  }
+
+  // 2. Dynamically determine current site URL from request headers
+  let siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+  try {
+    const headerStore = await headers();
+    const host =
+      headerStore.get("x-forwarded-host") ||
+      headerStore.get("host") ||
+      "";
+    if (host) {
+      const proto =
+        headerStore.get("x-forwarded-proto") ||
+        (host.includes("localhost") ? "http" : "https");
+      siteUrl = `${proto}://${host}`;
+    }
+  } catch (hdrErr) {
+    console.warn("Headers lookup warning:", hdrErr);
+  }
+
+  // Pass through callback route to exchange code for session and set cookies
+  const redirectUrl = `${siteUrl}/callback?next=/reset-password`;
+
+  // 3. Trigger Supabase native mailer
+  const supabase = await createClient();
+  const { error: resetErr } = await supabase.auth.resetPasswordForEmail(
+    cleanEmail,
     {
-      redirectTo: `${process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000"}/reset-password`,
+      redirectTo: redirectUrl,
     }
   );
 
-  if (error) {
-    return { error: error.message };
+  // 4. Generate direct recovery link via Admin API as a reliable fallback
+  // This solves university email firewall blocks (.ac.in) and Supabase development SMTP rate-limits
+  let directRecoveryLink: string | undefined;
+  try {
+    const admin = await createAdminClient();
+    const { data: linkData, error: linkErr } = await admin.auth.admin.generateLink({
+      type: "recovery",
+      email: cleanEmail,
+      options: {
+        redirectTo: redirectUrl,
+      },
+    });
+
+    if (!linkErr && linkData?.properties?.action_link) {
+      directRecoveryLink = linkData.properties.action_link;
+    }
+  } catch (linkErr) {
+    console.warn("Direct link generation warning:", linkErr);
   }
 
-  return { success: true };
+  // If Supabase returned an error and no direct link could be generated, report the error
+  if (resetErr && !directRecoveryLink) {
+    return { error: resetErr.message };
+  }
+
+  return { success: true, directRecoveryLink };
 }
 
 /**
@@ -383,7 +447,7 @@ export async function resetPassword(
     return { error: error.message };
   }
 
-  redirect("/login");
+  return { success: true };
 }
 
 /**

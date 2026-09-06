@@ -1,12 +1,23 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { resetPassword } from '@/actions/auth';
+import { createClient } from '@/lib/supabase/client';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { ShieldCheck, Lock, CheckCircle2, AlertCircle, Eye, EyeOff } from 'lucide-react';
+import {
+  ShieldCheck,
+  Lock,
+  CheckCircle2,
+  AlertCircle,
+  Eye,
+  EyeOff,
+  KeyRound,
+  ArrowLeft,
+  Loader2,
+} from 'lucide-react';
 
 export default function ResetPasswordPage() {
   const router = useRouter();
@@ -15,6 +26,54 @@ export default function ResetPasswordPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
   const [message, setMessage] = useState('');
+  const [checkingSession, setCheckingSession] = useState(true);
+  const [hasValidSession, setHasValidSession] = useState(false);
+
+  // Check and initialize session from URL code or token
+  useEffect(() => {
+    const supabase = createClient();
+
+    async function initSession() {
+      // 1. Check if ?code= is present in URL (redirected from Supabase)
+      if (typeof window !== 'undefined') {
+        const urlParams = new URLSearchParams(window.location.search);
+        const code = urlParams.get('code');
+        if (code) {
+          const { error } = await supabase.auth.exchangeCodeForSession(code);
+          if (!error) {
+            setHasValidSession(true);
+            setCheckingSession(false);
+            return;
+          }
+        }
+      }
+
+      // 2. Check if active session already exists in cookies/storage
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+
+      if (user) {
+        setHasValidSession(true);
+      } else {
+        setHasValidSession(false);
+      }
+      setCheckingSession(false);
+    }
+
+    initSession();
+
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((event, session) => {
+      if (session?.user || event === 'PASSWORD_RECOVERY') {
+        setHasValidSession(true);
+        setCheckingSession(false);
+      }
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
 
   // Password rules validation
   const hasMinLength = password.length >= 8;
@@ -29,10 +88,30 @@ export default function ResetPasswordPage() {
     if (!isFormValid) return;
 
     setStatus('loading');
-    const result = await resetPassword({
+    setMessage('');
+
+    // 1. Attempt server-side password update
+    let result = await resetPassword({
       password,
       confirmPassword,
     });
+
+    // 2. Fallback to client-side update if server-side cookies were desynced
+    if (result?.error) {
+      try {
+        const supabase = createClient();
+        const { error: clientErr } = await supabase.auth.updateUser({
+          password,
+        });
+        if (!clientErr) {
+          result = { success: true };
+        } else {
+          result = { error: clientErr.message };
+        }
+      } catch {
+        // Retain original result
+      }
+    }
 
     if (result?.error) {
       setStatus('error');
@@ -45,6 +124,50 @@ export default function ResetPasswordPage() {
     }
   };
 
+  // Loading state while checking recovery session
+  if (checkingSession) {
+    return (
+      <div className="flex flex-col items-center justify-center py-12 space-y-3">
+        <Loader2 className="w-8 h-8 text-accent-blue animate-spin" />
+        <p className="text-body-sm text-ink-muted">Validating authorization session...</p>
+      </div>
+    );
+  }
+
+  // Session expired or invalid state
+  if (!hasValidSession) {
+    return (
+      <div className="flex flex-col space-y-6 text-center py-4 animate-in fade-in-50 duration-300">
+        <div className="w-14 h-14 rounded-2xl bg-amber-500/10 border border-amber-500/20 text-amber-500 flex items-center justify-center mx-auto shadow-sm">
+          <KeyRound className="w-7 h-7" />
+        </div>
+        <div className="space-y-2">
+          <h1 className="text-display-md text-ink font-semibold tracking-tight">
+            Authorization Required
+          </h1>
+          <p className="text-body text-ink-muted leading-relaxed max-w-sm mx-auto">
+            To choose a new password, you need an active recovery authorization link.
+          </p>
+        </div>
+
+        <div className="space-y-3 pt-2">
+          <Link href="/forgot-password" className="block w-full">
+            <Button className="w-full rounded-pill h-11 text-body-sm font-medium">
+              Request New Recovery Link
+            </Button>
+          </Link>
+          <Link
+            href="/login"
+            className="inline-flex items-center gap-1.5 text-body-sm text-ink-muted hover:text-ink"
+          >
+            <ArrowLeft className="w-3.5 h-3.5" /> Return to Sign In
+          </Link>
+        </div>
+      </div>
+    );
+  }
+
+  // Success state
   if (status === 'success') {
     return (
       <div className="flex flex-col space-y-6 text-center py-4 animate-in fade-in-50 duration-300">
@@ -52,7 +175,9 @@ export default function ResetPasswordPage() {
           <CheckCircle2 className="w-8 h-8" />
         </div>
         <div className="space-y-2">
-          <h1 className="text-display-md text-ink font-semibold tracking-tight">Password updated</h1>
+          <h1 className="text-display-md text-ink font-semibold tracking-tight">
+            Password updated
+          </h1>
           <p className="text-body text-ink-muted leading-relaxed">
             Your account credentials have been successfully updated. Redirecting you to sign in...
           </p>
@@ -74,7 +199,9 @@ export default function ResetPasswordPage() {
         <div className="w-12 h-12 rounded-2xl bg-accent-blue/10 border border-accent-blue/20 text-accent-blue flex items-center justify-center mx-auto mb-1">
           <Lock className="w-6 h-6" />
         </div>
-        <h1 className="text-display-md text-ink font-semibold tracking-tight">Set new password</h1>
+        <h1 className="text-display-md text-ink font-semibold tracking-tight">
+          Set new password
+        </h1>
         <p className="text-body text-ink-muted">
           Choose a strong, unique password to secure your account
         </p>

@@ -5,12 +5,27 @@ import Link from 'next/link';
 import { forgotPassword } from '@/actions/auth';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { Mail, CheckCircle2, ShieldCheck, Clock, ArrowLeft, KeyRound, AlertCircle, RefreshCw } from 'lucide-react';
+import {
+  Mail,
+  CheckCircle2,
+  ShieldCheck,
+  Clock,
+  ArrowLeft,
+  KeyRound,
+  AlertCircle,
+  RefreshCw,
+  Sparkles,
+  ArrowRight,
+  Copy,
+  Check,
+} from 'lucide-react';
 
 export default function ForgotPasswordPage() {
   const [email, setEmail] = useState('');
   const [status, setStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
   const [message, setMessage] = useState('');
+  const [directLink, setDirectLink] = useState<string | null>(null);
+  const [copied, setCopied] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -24,6 +39,9 @@ export default function ForgotPasswordPage() {
       setStatus('error');
       setMessage(result.error);
     } else {
+      if (result?.directRecoveryLink) {
+        setDirectLink(result.directRecoveryLink);
+      }
       setStatus('success');
     }
   };
@@ -35,6 +53,9 @@ export default function ForgotPasswordPage() {
       setStatus('error');
       setMessage(result.error);
     } else {
+      if (result?.directRecoveryLink) {
+        setDirectLink(result.directRecoveryLink);
+      }
       setStatus('success');
     }
   };
@@ -89,6 +110,44 @@ export default function ForgotPasswordPage() {
             </div>
           </div>
         </div>
+
+        {/* Direct Recovery Link (Instant Fallback for Email Rate-Limits / Institutional Spam Filters) */}
+        {directLink && (
+          <div className="p-4 rounded-xl bg-accent-blue/10 border border-accent-blue/25 text-left space-y-3">
+            <div className="flex items-center justify-between">
+              <span className="text-body-sm font-bold text-ink flex items-center gap-1.5">
+                <Sparkles className="w-4 h-4 text-accent-blue" />
+                Email delayed or filtered?
+              </span>
+              <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-accent-blue/20 text-accent-blue uppercase tracking-wider">
+                Instant Access
+              </span>
+            </div>
+            <p className="text-caption text-ink-muted leading-relaxed">
+              Institutional firewalls (such as university <code className="text-xs font-mono text-ink">.ac.in</code> servers) or email rate limits may delay incoming messages. You can use your secure single-use authorization link directly:
+            </p>
+            <div className="pt-1 flex flex-col sm:flex-row gap-2">
+              <a
+                href={directLink}
+                className="flex-1 inline-flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-pill bg-accent-blue text-white font-semibold text-body-sm hover:opacity-90 shadow-sm transition-all text-center"
+              >
+                Reset Password Directly <ArrowRight className="w-4 h-4" />
+              </a>
+              <button
+                type="button"
+                onClick={() => {
+                  navigator.clipboard.writeText(directLink);
+                  setCopied(true);
+                  setTimeout(() => setCopied(false), 2000);
+                }}
+                className="px-4 py-2.5 rounded-pill bg-surface-2 border border-hairline text-caption font-medium text-ink hover:bg-surface-1 transition-colors flex items-center justify-center gap-1.5"
+              >
+                {copied ? <Check className="w-3.5 h-3.5 text-emerald-500" /> : <Copy className="w-3.5 h-3.5" />}
+                {copied ? 'Copied' : 'Copy Link'}
+              </button>
+            </div>
+          </div>
+        )}
 
         {/* Action Buttons */}
         <div className="space-y-3 pt-2">
