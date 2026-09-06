@@ -1,8 +1,7 @@
-import { createClient } from "@/lib/supabase/server";
+import { createClient, createAdminClient } from "@/lib/supabase/server";
 
 /**
  * Get mentorship sessions for the current user (as mentor or mentee).
- * Also returns available mentors (academicians open for consultancy).
  */
 export async function getMyMentorshipSessions() {
   const supabase = await createClient();
@@ -12,11 +11,12 @@ export async function getMyMentorshipSessions() {
 
   if (!user) return [];
 
-  const { data, error } = await supabase
+  const admin = await createAdminClient();
+  const { data, error } = await admin
     .from("mentorship_sessions")
     .select(
       `
-      id, topic, scheduled_at, duration_minutes, status,
+      id, mentor_id, mentee_id, topic, scheduled_at, duration_minutes, status,
       meeting_link, notes, rating, created_at,
       mentor:profiles!mentor_id(id, full_name, email, avatar_url, role),
       mentee:profiles!mentee_id(id, full_name, email, avatar_url, role)
@@ -33,15 +33,15 @@ export async function getMyMentorshipSessions() {
  * Get available mentors — academicians who are open for consultancy.
  */
 export async function getAvailableMentors() {
-  const supabase = await createClient();
+  const admin = await createAdminClient();
 
-  const { data, error } = await supabase
+  const { data, error } = await admin
     .from("academician_details")
     .select(
       `
-      id, department, designation, areas_of_expertise,
+      id, user_id, department, designation, areas_of_expertise,
       research_interests, open_for_consultancy,
-      user:profiles!user_id(id, full_name, email, avatar_url),
+      user:profiles!user_id(id, full_name, email, avatar_url, role),
       institution:institutions(name)
     `
     )
@@ -49,4 +49,50 @@ export async function getAvailableMentors() {
 
   if (error) return [];
   return data || [];
+}
+
+/**
+ * Get registered students list for guidance scheduling.
+ */
+export async function getStudentsList() {
+  const admin = await createAdminClient();
+
+  const { data, error } = await admin
+    .from("profiles")
+    .select("id, full_name, email, avatar_url")
+    .eq("role", "student")
+    .is("deleted_at", null)
+    .order("full_name", { ascending: true });
+
+  if (error) return [];
+  return data || [];
+}
+
+/**
+ * Get current user profile and academician consultancy status.
+ */
+export async function getCurrentMentorshipProfile() {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) return null;
+
+  const admin = await createAdminClient();
+  const [{ data: profile }, { data: academicianDetails }] = await Promise.all([
+    admin.from("profiles").select("id, full_name, email, role, avatar_url").eq("id", user.id).maybeSingle(),
+    admin.from("academician_details").select("*").eq("user_id", user.id).maybeSingle(),
+  ]);
+
+  return {
+    user: profile || {
+      id: user.id,
+      email: user.email || "",
+      role: "academician",
+      full_name: (user.user_metadata?.full_name as string) || "User",
+      avatar_url: null,
+    },
+    academicianDetails: academicianDetails || null,
+  };
 }
