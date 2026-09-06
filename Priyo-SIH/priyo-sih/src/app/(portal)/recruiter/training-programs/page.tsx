@@ -1,8 +1,8 @@
 import Link from "next/link";
-import { GraduationCap, PlusCircle } from "lucide-react";
+import { ArrowUpRight, GraduationCap, PlusCircle, Users } from "lucide-react";
 import { getMyOpportunities } from "@/queries/opportunities";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 
 const trainingTypes = new Set(["fdp", "faculty_internship", "apprenticeship"]);
 
@@ -23,7 +23,7 @@ export default async function TrainingProgramsPage() {
       ) : (
         <div className="grid gap-4 md:grid-cols-2">
           {programs.map((program) => (
-            <Card key={program.id}>
+            <Card key={program.id} className="flex flex-col">
               <CardHeader>
                 <CardTitle>{program.title}</CardTitle>
                 <CardDescription className="capitalize">{program.type.replaceAll("_", " ")} · {program.status}</CardDescription>
@@ -31,6 +31,20 @@ export default async function TrainingProgramsPage() {
               <CardContent className="text-body-sm text-ink-muted">
                 Deadline: {program.deadline || "Not set"} · {program.openings_count} opening{program.openings_count === 1 ? "" : "s"}
               </CardContent>
+              <CardFooter className="flex items-center justify-between border-t border-border-subtle pt-4 mt-auto">
+                <Link href="/recruiter/applicants">
+                  <Button size="sm" variant="secondary" className="rounded-pill">
+                    <Users className="mr-1.5 h-3.5 w-3.5" />
+                    Review Applicants
+                  </Button>
+                </Link>
+                <Link href={`/opportunities/${program.id}`}>
+                  <Button size="sm" variant="ghost" className="rounded-pill text-ink-muted hover:text-ink">
+                    Details
+                    <ArrowUpRight className="ml-1 h-3.5 w-3.5" />
+                  </Button>
+                </Link>
+              </CardFooter>
             </Card>
           ))}
         </div>

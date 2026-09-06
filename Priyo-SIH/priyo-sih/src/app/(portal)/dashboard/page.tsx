@@ -11,8 +11,9 @@ import {
   FileText, Brain, Target, CheckCircle, 
   Briefcase, Users, Building,
   Activity, Award, BarChart,
-  PlusCircle, ArrowUpRight, Handshake, Landmark, Clock, BookOpen
+  PlusCircle, ArrowUpRight, Handshake, Landmark, Clock, BookOpen, GraduationCap
 } from 'lucide-react';
+import { IndustryApplicationsList } from './industry-applications-list';
 
 export default async function DashboardPage() {
   const supabase = await createClient();
@@ -111,59 +112,64 @@ export default async function DashboardPage() {
 
   const renderIndustryDashboard = (data: any) => (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-display-md text-ink">Industry Dashboard</h1>
-          <p className="text-body text-ink-muted">Welcome back, {profile.full_name}! Manage your opportunities and find top talent.</p>
+          <div className="flex items-center space-x-2 mb-1">
+            <h1 className="text-display-md text-ink">Industry Dashboard</h1>
+            <Badge variant="accent" className="bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30">
+              <Briefcase className="w-3 h-3 mr-1" />
+              Recruiter & Training Portal
+            </Badge>
+          </div>
+          <p className="text-body text-ink-muted">Welcome back, {profile.full_name}! Review candidates, shortlist applicants, and manage programs.</p>
+        </div>
+        <div className="flex flex-wrap items-center gap-2">
+          <Link href="/recruiter/applicants">
+            <Button size="sm" className="rounded-pill bg-accent-blue text-white hover:opacity-90">
+              <Users className="w-4 h-4 mr-1.5" />
+              Review Applicants (ATS)
+            </Button>
+          </Link>
+          <Link href="/recruiter/training-programs">
+            <Button size="sm" variant="secondary" className="rounded-pill">
+              <GraduationCap className="w-4 h-4 mr-1.5" />
+              Training Programs
+            </Button>
+          </Link>
+          <Link href="/recruiter/post-opportunity">
+            <Button size="sm" variant="secondary" className="rounded-pill">
+              <PlusCircle className="w-4 h-4 mr-1.5" />
+              Post Opportunity
+            </Button>
+          </Link>
         </div>
       </div>
       
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+      {/* Stat Cards */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {[
-          { label: 'Active Postings', value: data.activePostings, icon: Briefcase },
-          { label: 'Total Applicants', value: data.totalApplicants, icon: Users },
-          { label: 'Positions Filled', value: data.positionsFilled, icon: CheckCircle },
-          { label: 'Total Postings', value: data.totalPostings, icon: Target },
+          { label: 'Total Applicants', value: data.totalApplicants, icon: Users, href: '/recruiter/applicants' },
+          { label: 'Active Postings', value: data.activePostings, icon: Briefcase, href: '/recruiter/training-programs' },
+          { label: 'Positions Filled', value: data.positionsFilled, icon: CheckCircle, href: '/recruiter/applicants' },
+          { label: 'Total Postings', value: data.totalPostings, icon: Target, href: '/recruiter/post-opportunity' },
         ].map((stat, i) => (
-          <Card key={i} className="bg-surface-1 border-hairline p-6 rounded-xl flex items-center space-x-4">
-            <div className="w-12 h-12 rounded-full bg-surface-2 flex items-center justify-center">
-              <stat.icon className="w-6 h-6 text-ink" />
-            </div>
-            <div>
-              <div className="text-display-md text-ink leading-none">{stat.value}</div>
-              <div className="text-caption text-ink-muted mt-1">{stat.label}</div>
-            </div>
-          </Card>
+          <Link key={i} href={stat.href} className="group">
+            <Card className="bg-surface-1 border-hairline p-5 rounded-xl flex items-center space-x-4 transition-all hover:border-accent-blue/40 hover:shadow-xs">
+              <div className="w-12 h-12 rounded-xl bg-surface-2 flex items-center justify-center text-ink group-hover:text-accent-blue group-hover:bg-accent-blue/10 transition-colors">
+                <stat.icon className="w-6 h-6" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <div className="text-display-md text-ink leading-none">{stat.value}</div>
+                <div className="text-caption text-ink-muted mt-1 truncate">{stat.label}</div>
+              </div>
+              <ArrowUpRight className="w-4 h-4 text-ink-muted group-hover:text-ink opacity-0 group-hover:opacity-100 transition-opacity" />
+            </Card>
+          </Link>
         ))}
       </div>
       
-      <Card className="bg-surface-1 border-hairline p-6 rounded-xl">
-        <h3 className="text-headline text-ink mb-4">Recent Applications Received</h3>
-        {data.recentApplications && data.recentApplications.length > 0 ? (
-          <div className="space-y-4">
-            {data.recentApplications.map((app: any) => {
-              const applicantName = Array.isArray(app.applicant) ? app.applicant[0]?.full_name : app.applicant?.full_name;
-              return (
-                <div key={app.id} className="flex items-center justify-between p-4 bg-canvas rounded-md border border-hairline">
-                  <div>
-                    <h4 className="text-body-sm font-medium text-ink">{app.opportunity?.title}</h4>
-                    <p className="text-caption text-ink-muted">Applicant: {applicantName || 'Anonymous'}</p>
-                  </div>
-                  <div className="text-caption text-accent-blue bg-accent-blue/10 px-2 py-1 rounded-sm capitalize">
-                    {app.status?.replace('_', ' ')}
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-        ) : (
-          <EmptyState
-            icon={FileText}
-            title="No applications received"
-            description="You haven't received any new applications yet."
-          />
-        )}
-      </Card>
+      {/* Interactive Applications List with Instant Shortlist Control */}
+      <IndustryApplicationsList initialApplications={data.recentApplications} />
     </div>
   );
 

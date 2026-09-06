@@ -273,8 +273,8 @@ async function getIndustryDashboard(
         .from("applications")
         .select(
           `id, match_score, status, created_at,
-           applicant:profiles!applicant_id(full_name, avatar_url),
-           opportunity:opportunities!inner(id, title)`,
+           applicant:profiles!applicant_id(id, full_name, email, avatar_url),
+           opportunity:opportunities!inner(id, title, type)`,
           { count: "exact" }
         )
         .in("opportunity_id", oppIds)
