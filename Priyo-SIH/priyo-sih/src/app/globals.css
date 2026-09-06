@@ -244,3 +244,23 @@ body {
   box-shadow: 0 0 0 1px rgba(0, 153, 255, 0.15);
   border-radius: var(--radius-md);
 }
+
+/* ============================================================
+   Marquee & Ambient Glow Animations
+   ============================================================ */
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-marquee {
+  animation: marquee 35s linear infinite;
+}
+
+.animate-marquee:hover {
+  animation-play-state: paused;
+}

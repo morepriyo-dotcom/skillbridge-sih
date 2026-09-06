@@ -1,42 +1,11 @@
 import React from 'react';
 import Link from 'next/link';
-import { Button } from '@/components/ui/button';
-import { Menu } from 'lucide-react';
-
-import { ThemeToggle } from '@/components/theme-toggle';
+import { MarketingNavbar } from '@/components/marketing/navbar';
 
 export default function MarketingLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div className="min-h-screen bg-canvas flex flex-col">
-      <header className="sticky top-0 z-50 h-[56px] bg-canvas border-b border-hairline flex items-center justify-between px-6">
-        <div className="flex items-center">
-          <Link href="/" className="text-ink font-bold text-headline tracking-tighter">
-            SkillBridge
-          </Link>
-        </div>
-        
-        <nav className="hidden md:flex items-center space-x-6">
-          <Link href="/" className="text-body-sm text-ink hover:text-ink-muted">Home</Link>
-          <Link href="/opportunities" className="text-body-sm text-ink hover:text-ink-muted">Opportunities</Link>
-          <Link href="/about" className="text-body-sm text-ink hover:text-ink-muted">About</Link>
-        </nav>
-        
-        <div className="hidden md:flex items-center space-x-4">
-          <ThemeToggle />
-          <Link href="/login">
-            <Button variant="secondary" className="rounded-pill px-4">Sign In</Button>
-          </Link>
-          <Link href="/register">
-            <Button className="rounded-pill px-4">Get Started</Button>
-          </Link>
-        </div>
-
-        <div className="md:hidden flex items-center">
-          <button className="text-ink p-2">
-            <Menu className="w-6 h-6" />
-          </button>
-        </div>
-      </header>
+    <div className="min-h-screen bg-canvas flex flex-col selection:bg-accent-blue/30 selection:text-ink">
+      <MarketingNavbar />
 
       <main className="flex-1">
         {children}
