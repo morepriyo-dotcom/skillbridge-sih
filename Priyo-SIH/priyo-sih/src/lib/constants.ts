@@ -140,6 +140,7 @@ export const ROLE_NAV_ITEMS: Record<UserRole, Array<{ label: string; href: strin
     { label: "Dashboard", href: "/dashboard", icon: "LayoutDashboard" },
     { label: "Post Opportunity", href: "/recruiter/post-opportunity", icon: "PlusCircle" },
     { label: "Applicants", href: "/recruiter/applicants", icon: "Users" },
+    { label: "Role Assignments", href: "/recruiter/assignments", icon: "ClipboardCheck" },
     { label: "Training Programs", href: "/recruiter/training-programs", icon: "GraduationCap" },
     { label: "Collaborations", href: "/collaborations", icon: "Handshake" },
   ],
