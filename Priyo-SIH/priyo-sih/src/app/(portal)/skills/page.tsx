@@ -1,153 +1,96 @@
-import React from 'react';
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { getUserSkills, getSkillTaxonomy, getAvailableAssessments } from '@/queries/skills';
-import { SkillRadarChart } from '@/components/skills/skill-radar-chart';
-import { CheckCircle2, AlertCircle, Plus, ShieldCheck, Sparkles, BookOpen } from 'lucide-react';
-import Link from 'next/link';
+import React from "react";
+import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import {
+  getUserSkills,
+  getSkillTaxonomy,
+  getAvailableAssessments,
+  getMyAssessmentResults,
+} from "@/queries/skills";
+import { getStudentCareerGoals } from "@/queries/profile";
+import { SkillGapManager } from "./skill-gap-manager";
+import { CheckCircle2, AlertCircle, Plus, ShieldCheck, Sparkles, BookOpen, Trash2 } from "lucide-react";
+import Link from "next/link";
+import { removeUserSkill } from "@/actions/skills";
+
+export const metadata = {
+  title: "Skill Mapping & Desired Role Gap Analysis | SkillBridge",
+  description: "Evaluate your competencies, analyze skill gaps for your desired industry role, and bridge requirements.",
+};
 
 export default async function SkillsPage() {
-  const userSkills = await getUserSkills();
-  const taxonomy = await getSkillTaxonomy();
-  const availableAssessments = await getAvailableAssessments();
-
-  // Prepare radar chart data
-  const radarData = userSkills.slice(0, 6).map((item: any) => {
-    const weights: Record<string, number> = {
-      beginner: 40,
-      intermediate: 65,
-      advanced: 85,
-      expert: 98,
-    };
-    const skillName = Array.isArray(item.skill) ? item.skill[0]?.name : item.skill?.name;
-    return {
-      skill: skillName || 'Skill',
-      userScore: item.verified ? (weights[item.proficiency] || 60) : (weights[item.proficiency] || 50) - 10,
-      industryBenchmark: 80,
-    };
-  });
-
-  const displayRadar = radarData.length >= 3 ? radarData : undefined;
-
-  // Determine recommended skills
-  const userSkillIds = userSkills.map((us: any) => us.skill_id);
-  const recommendedUpskilling = taxonomy
-    .filter((t: any) => !userSkillIds.includes(t.id))
-    .slice(0, 3);
+  const [userSkills, taxonomy, availableAssessments, assessmentSubmissions, careerGoals] =
+    await Promise.all([
+      getUserSkills(),
+      getSkillTaxonomy(),
+      getAvailableAssessments(),
+      getMyAssessmentResults(),
+      getStudentCareerGoals(),
+    ]);
 
   return (
-    <div className="space-y-8 max-w-7xl mx-auto">
+    <div className="space-y-8 max-w-7xl mx-auto pb-16">
       {/* Header */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
-          <h1 className="text-display-md text-ink font-medium">Skill Mapping & Profiling</h1>
+          <h1 className="text-display-md text-ink font-semibold">Skill Mapping & Role Gap Analysis</h1>
           <p className="text-body text-ink-muted mt-1">
-            Evaluate competencies, identify industry gaps, and get verified credentials.
+            Specify your desired industry role, evaluate competencies from your assessments, and close your skill gaps.
           </p>
         </div>
-        <div className="flex gap-3">
+        <div className="flex items-center gap-3">
+          <Link href="/profile">
+            <Button variant="secondary" className="rounded-pill">
+              Edit Career Profile
+            </Button>
+          </Link>
           <Link href="/skills/assessments">
-            <Button className="rounded-pill">
+            <Button className="rounded-pill bg-accent-blue text-white">
               <Sparkles className="w-4 h-4 mr-2" /> Take Skill Assessment
             </Button>
           </Link>
         </div>
       </div>
 
-      {/* Top Banner Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Radar Chart */}
-        <Card className="lg:col-span-2">
-          <CardHeader>
-            <div className="flex justify-between items-center">
-              <div>
-                <CardTitle className="text-headline">Skill Gap Analysis</CardTitle>
-                <CardDescription>
-                  Your current verified competencies compared against benchmark industry standards
-                </CardDescription>
-              </div>
-              <Badge variant="accent">AI Powered</Badge>
-            </div>
-          </CardHeader>
-          <CardContent>
-            <SkillRadarChart data={displayRadar} />
-          </CardContent>
-        </Card>
+      {/* Interactive Skill Gap Manager with Role Selection & Upload Modal */}
+      <SkillGapManager
+        userSkills={userSkills}
+        taxonomy={taxonomy}
+        assessmentSubmissions={assessmentSubmissions}
+        availableAssessments={availableAssessments}
+        initialDesiredRole={careerGoals.desired_role}
+        initialDesiredSector={careerGoals.desired_sector}
+      />
 
-        {/* Action / Recommendations Card */}
-        <div className="space-y-6">
-          <Card className="bg-surface-2 border-hairline">
-            <CardHeader>
-              <CardTitle className="text-headline flex items-center gap-2">
-                <BookOpen className="w-5 h-5 text-accent-blue" /> Recommended Upskilling
-              </CardTitle>
-              <CardDescription>
-                Skills with highest industry demand missing from your profile
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-3">
-              {recommendedUpskilling.length > 0 ? (
-                recommendedUpskilling.map((item: any) => (
-                  <div
-                    key={item.id}
-                    className="p-3 bg-surface-1 rounded-md border border-hairline flex justify-between items-center"
-                  >
-                    <div>
-                      <p className="text-body-sm font-medium text-ink">{item.name}</p>
-                      <p className="text-micro text-ink-muted">{item.sector}</p>
-                    </div>
-                    <Badge variant="warning">High Demand</Badge>
-                  </div>
-                ))
-              ) : (
-                <div className="text-body-sm text-ink-muted py-2 text-center">
-                  You have acquired all core skills!
-                </div>
-              )}
-            </CardContent>
-          </Card>
-
-          <Card className="border-accent-blue/30 bg-accent-blue/5">
-            <CardHeader>
-              <CardTitle className="text-headline flex items-center gap-2 text-ink">
-                <ShieldCheck className="w-5 h-5 text-accent-blue" /> Verified Badges
-              </CardTitle>
-              <CardDescription>
-                Complete skill assessments to get automated verification badges on your digital portfolio.
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <Link href="/skills/assessments">
-                <Button variant="secondary" className="w-full rounded-pill">
-                  Explore {availableAssessments.length > 0 ? `${availableAssessments.length}+` : ''} Available Tests
-                </Button>
-              </Link>
-            </CardContent>
-          </Card>
-        </div>
-      </div>
-
-      {/* User Skills Inventory */}
+      {/* User Skills Inventory Card */}
       <Card>
         <CardHeader>
-          <div className="flex justify-between items-center">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
             <div>
-              <CardTitle className="text-headline">Your Skills Inventory</CardTitle>
+              <CardTitle className="text-headline flex items-center gap-2">
+                <ShieldCheck className="w-5 h-5 text-accent-blue" />
+                Your Verified & Listed Skills Inventory
+              </CardTitle>
               <CardDescription>
-                {userSkills.length} skills listed in your profile
+                {userSkills.length} competencies registered under your profile
               </CardDescription>
             </div>
+            <Link href="/skills/assessments">
+              <Badge variant="accent" className="cursor-pointer">
+                {userSkills.filter((u: any) => u.verified).length} Verified by Assessment
+              </Badge>
+            </Link>
           </div>
         </CardHeader>
         <CardContent>
           {userSkills.length === 0 ? (
             <div className="py-12 text-center text-ink-muted space-y-3">
-              <AlertCircle className="w-10 h-10 mx-auto opacity-50" />
-              <p className="text-body">No skills added yet. Complete an assessment or add skills to begin.</p>
-              <Link href="/skills/assessments">
-                <Button className="rounded-pill">Browse Assessments</Button>
-              </Link>
+              <AlertCircle className="w-10 h-10 mx-auto opacity-50 text-amber-500" />
+              <p className="text-body font-medium">No skills uploaded yet.</p>
+              <p className="text-body-sm text-ink-muted max-w-md mx-auto">
+                Use the "Upload Skills" button above to paste your technical competencies, or take an assessment to automatically verify your skills.
+              </p>
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -156,27 +99,31 @@ export default async function SkillsPage() {
                 return (
                   <div
                     key={item.id}
-                    className="p-4 bg-surface-2 rounded-xl border border-hairline flex flex-col justify-between"
+                    className="p-4 bg-surface-2 rounded-xl border border-hairline flex flex-col justify-between shadow-xs transition-all hover:border-accent-blue/30"
                   >
                     <div className="flex justify-between items-start">
                       <div>
-                        <h4 className="text-body font-medium text-ink">{s?.name || 'Skill'}</h4>
-                        <p className="text-micro text-ink-muted mt-0.5">{s?.category || 'General'} &bull; {s?.sector || 'General'}</p>
+                        <h4 className="text-body font-semibold text-ink">{s?.name || "Skill"}</h4>
+                        <p className="text-micro text-ink-muted mt-0.5">
+                          {s?.category || "Technical"} &bull; {s?.sector || "Industry"}
+                        </p>
                       </div>
                       {item.verified ? (
-                        <Badge variant="success" className="flex items-center gap-1">
+                        <Badge variant="success" className="flex items-center gap-1 text-[11px]">
                           <CheckCircle2 className="w-3 h-3" /> Verified
                         </Badge>
                       ) : (
-                        <Badge variant="muted">Self Declared</Badge>
+                        <Badge variant="muted" className="text-[11px]">Self Declared</Badge>
                       )}
                     </div>
-                    <div className="mt-4 pt-3 border-t border-hairline flex justify-between items-center">
-                      <span className="text-micro text-ink-muted capitalize">
-                        Level: <strong className="text-ink">{item.proficiency}</strong>
+                    <div className="mt-4 pt-3 border-t border-hairline flex justify-between items-center text-micro">
+                      <span className="text-ink-muted">
+                        Level: <strong className="text-ink capitalize">{item.proficiency}</strong>
                       </span>
-                      <span className="text-micro text-ink-muted">
-                        Source: {item.verification_source?.replace('_', ' ') || 'Assessment'}
+                      <span className="text-ink-muted">
+                        {item.verification_source === "assessment"
+                          ? "Via Assessment"
+                          : "Self Reported"}
                       </span>
                     </div>
                   </div>

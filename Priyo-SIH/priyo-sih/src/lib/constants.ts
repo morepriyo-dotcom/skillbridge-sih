@@ -127,6 +127,7 @@ export const ROLE_NAV_ITEMS: Record<UserRole, Array<{ label: string; href: strin
     { label: "Applications", href: "/applications", icon: "FileText" },
     { label: "Portfolio", href: "/portfolio", icon: "Award" },
     { label: "Mentorship", href: "/mentorship", icon: "Users" },
+    { label: "My Profile", href: "/profile", icon: "User" },
   ],
   academician: [
     { label: "Faculty Dashboard", href: "/dashboard", icon: "LayoutDashboard" },
@@ -135,6 +136,7 @@ export const ROLE_NAV_ITEMS: Record<UserRole, Array<{ label: string; href: strin
     { label: "FDPs & Research Openings", href: "/opportunities", icon: "Briefcase" },
     { label: "FDP Applications", href: "/applications", icon: "FileText" },
     { label: "Research & Skills Matrix", href: "/skills", icon: "Zap" },
+    { label: "My Profile", href: "/profile", icon: "User" },
   ],
   industry_partner: [
     { label: "Dashboard", href: "/dashboard", icon: "LayoutDashboard" },
@@ -142,6 +144,7 @@ export const ROLE_NAV_ITEMS: Record<UserRole, Array<{ label: string; href: strin
     { label: "Applicants", href: "/recruiter/applicants", icon: "Users" },
     { label: "Training Programs", href: "/recruiter/training-programs", icon: "GraduationCap" },
     { label: "Collaborations", href: "/collaborations", icon: "Handshake" },
+    { label: "My Profile", href: "/profile", icon: "User" },
   ],
   institution_admin: [
     { label: "Dashboard", href: "/dashboard", icon: "LayoutDashboard" },
@@ -149,11 +152,13 @@ export const ROLE_NAV_ITEMS: Record<UserRole, Array<{ label: string; href: strin
     { label: "Placement Drives", href: "/institution/placement-drives", icon: "Target" },
     { label: "Analytics", href: "/institution/analytics", icon: "BarChart3" },
     { label: "Collaborations", href: "/collaborations", icon: "Handshake" },
+    { label: "My Profile", href: "/profile", icon: "User" },
   ],
   super_admin: [
     { label: "Dashboard", href: "/dashboard", icon: "LayoutDashboard" },
     { label: "Verify Partners", href: "/admin/verify-partners", icon: "ShieldCheck" },
     { label: "Skill Taxonomy", href: "/admin/skill-taxonomy", icon: "Network" },
     { label: "National Analytics", href: "/admin/national-analytics", icon: "Globe" },
+    { label: "My Profile", href: "/profile", icon: "User" },
   ],
 };

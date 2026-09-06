@@ -257,3 +257,136 @@ export async function submitAssessment(
   revalidatePath("/portfolio");
   return { data: { score: scorePercentage, passed } };
 }
+
+/**
+ * Bulk add or upload multiple skills to the current student profile.
+ * Resolves skill names against skills_master or creates new entries.
+ */
+export async function bulkAddUserSkills(
+  skills: Array<{ name: string; proficiency?: ProficiencyLevel }>
+): Promise<ActionResult<{ count: number }>> {
+  if (!skills || skills.length === 0) {
+    return { error: "No skills provided." };
+  }
+
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) return { error: "Unauthorized" };
+
+  const admin = await createAdminClient();
+
+  // 1. Fetch existing skills in skills_master for matching
+  const { data: existingTaxonomy } = await admin
+    .from("skills_master")
+    .select("id, name");
+
+  const taxMap = new Map<string, string>();
+  for (const s of existingTaxonomy || []) {
+    taxMap.set(s.name.trim().toLowerCase(), s.id);
+  }
+
+  let addedCount = 0;
+
+  for (const item of skills) {
+    const rawName = item.name.trim();
+    if (!rawName) continue;
+
+    const lowerName = rawName.toLowerCase();
+    let skillId = taxMap.get(lowerName);
+
+    // If not found in taxonomy, insert it
+    if (!skillId) {
+      const { data: newSkill, error: newSkillErr } = await admin
+        .from("skills_master")
+        .insert({
+          name: rawName,
+          category: "Technical",
+          sector: "Industry General",
+        })
+        .select("id")
+        .maybeSingle();
+
+      if (!newSkillErr && newSkill?.id) {
+        const createdId: string = newSkill.id;
+        skillId = createdId;
+        taxMap.set(lowerName, createdId);
+      }
+    }
+
+    if (skillId) {
+      const proficiency = item.proficiency || "intermediate";
+      const { error: upsertErr } = await admin.from("user_skills").upsert(
+        {
+          user_id: user.id,
+          skill_id: skillId,
+          proficiency,
+          verification_source: "self_declared",
+        },
+        { onConflict: "user_id,skill_id" }
+      );
+
+      if (!upsertErr) {
+        addedCount++;
+      }
+    }
+  }
+
+  revalidatePath("/skills");
+  revalidatePath("/portfolio");
+  revalidatePath("/profile");
+  return { data: { count: addedCount } };
+}
+
+/**
+ * Save student's desired role and target industry sector.
+ */
+export async function saveStudentDesiredRole(
+  desiredRole: string,
+  desiredSector?: string
+): Promise<ActionResult<{ desiredRole: string; desiredSector: string }>> {
+  if (!desiredRole.trim()) {
+    return { error: "Desired role title is required." };
+  }
+
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) return { error: "Unauthorized" };
+
+  const admin = await createAdminClient();
+  const cleanRole = desiredRole.trim();
+  const cleanSector = desiredSector?.trim() || "Information Technology";
+
+  await admin
+    .from("audit_log")
+    .delete()
+    .eq("table_name", "student_career_goals")
+    .eq("record_id", user.id);
+
+  const { error } = await admin.from("audit_log").insert({
+    table_name: "student_career_goals",
+    record_id: user.id,
+    action: "UPDATE_CAREER_GOALS",
+    performed_by: user.id,
+    new_data: {
+      user_id: user.id,
+      desired_role: cleanRole,
+      desired_sector: cleanSector,
+      updated_at: new Date().toISOString(),
+    },
+  });
+
+  if (error) return { error: error.message };
+
+  revalidatePath("/skills");
+  revalidatePath("/profile");
+  revalidatePath("/portfolio");
+
+  return { data: { desiredRole: cleanRole, desiredSector: cleanSector } };
+}
+

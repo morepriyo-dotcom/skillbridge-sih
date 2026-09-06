@@ -20,9 +20,13 @@ export default async function PortalLayout({ children }: { children: React.React
           <PortalBreadcrumb />
           <div className="flex items-center space-x-3">
             <ThemeToggle />
-            <div className="w-8 h-8 rounded-full bg-surface-2 flex items-center justify-center text-ink text-sm font-bold">
+            <a
+              href="/profile"
+              className="w-8 h-8 rounded-full bg-surface-2 border border-hairline flex items-center justify-center text-ink text-sm font-bold hover:border-accent-blue/60 transition-all cursor-pointer"
+              title="View & Edit My Profile"
+            >
               {profile.full_name.charAt(0).toUpperCase()}
-            </div>
+            </a>
           </div>
         </header>
         <main className="flex-1 overflow-y-auto p-6">

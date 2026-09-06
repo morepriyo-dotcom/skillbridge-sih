@@ -31,6 +31,7 @@ import {
   Network,
   Globe,
   Landmark,
+  User,
 } from 'lucide-react';
 import { signOut } from '@/actions/auth';
 
@@ -55,6 +56,7 @@ const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
   Network,
   Globe,
   Landmark,
+  User,
 };
 
 const roleMeta: Record<string, { portalTitle: string; viewLabel: string; badgeClass: string; icon: typeof Landmark }> = {
@@ -183,13 +185,22 @@ export function PortalSidebar({ role, userName }: { role: string; userName: stri
 
       {/* User Info & Sign Out Footer */}
       <div className="p-3 border-t border-hairline">
-        <div className={cn('flex items-center', collapsed ? 'justify-center' : 'space-x-3 mb-3')}>
-          <div className="w-8 h-8 rounded-full bg-surface-2 border border-hairline flex items-center justify-center text-ink flex-shrink-0 font-semibold text-caption">
+        <Link
+          href="/profile"
+          className={cn(
+            'flex items-center rounded-lg p-1.5 transition-all hover:bg-surface-2 group cursor-pointer',
+            collapsed ? 'justify-center' : 'space-x-3 mb-2'
+          )}
+          title="Edit My Profile"
+        >
+          <div className="w-8 h-8 rounded-full bg-surface-2 border border-hairline flex items-center justify-center text-ink flex-shrink-0 font-semibold text-caption group-hover:border-accent-blue/50">
             {userName.charAt(0).toUpperCase()}
           </div>
           {!collapsed && (
             <div className="flex flex-col overflow-hidden">
-              <span className="text-body-sm font-semibold text-ink truncate">{userName}</span>
+              <span className="text-body-sm font-semibold text-ink truncate group-hover:text-accent-blue transition-colors">
+                {userName}
+              </span>
               <span className={cn(
                 "text-micro font-medium truncate",
                 role === 'academician' ? "text-amber-600 dark:text-amber-400" : "text-ink-muted"
@@ -198,7 +209,7 @@ export function PortalSidebar({ role, userName }: { role: string; userName: stri
               </span>
             </div>
           )}
-        </div>
+        </Link>
 
         <form action={signOut} className={cn(collapsed && 'flex justify-center')}>
           <Button
