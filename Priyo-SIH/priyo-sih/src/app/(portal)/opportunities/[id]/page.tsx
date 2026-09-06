@@ -19,12 +19,9 @@ import {
   IndianRupee,
   GraduationCap,
   Building2,
-  CheckCircle2,
-  ClipboardCheck,
 } from "lucide-react";
 import Link from "next/link";
 import { ApplyButton } from "./apply-button";
-import { getRoleAssignmentForOpportunity } from "@/queries/role-assignments";
 
 export default async function OpportunityDetailPage({
   params,
@@ -75,20 +72,6 @@ export default async function OpportunityDetailPage({
     .select("role")
     .eq("id", user.id)
     .single();
-
-  // Check if role has an assigned screening task
-  const assignedTask = await getRoleAssignmentForOpportunity(id);
-
-  let userTaskSubmission: { score: number; passed: boolean } | null = null;
-  if (user && assignedTask?.assessment_id) {
-    const { data: sub } = await supabase
-      .from("assessment_submissions")
-      .select("score, passed")
-      .eq("assessment_id", assignedTask.assessment_id)
-      .eq("user_id", user.id)
-      .maybeSingle();
-    userTaskSubmission = sub as any;
-  }
 
   const industry = Array.isArray(opportunity.industry)
     ? opportunity.industry[0]
@@ -310,67 +293,6 @@ export default async function OpportunityDetailPage({
               </div>
             </div>
           </Card>
-
-          {/* Assigned Screening Task Card */}
-          {assignedTask && (
-            <Card className="p-5 border-accent-blue/40 bg-surface-1 space-y-3">
-              <div className="flex justify-between items-start gap-2">
-                <Badge variant="accent" className="text-micro bg-purple-500/20 text-purple-300">
-                  Prerequisite Role Task
-                </Badge>
-                {userTaskSubmission ? (
-                  userTaskSubmission.passed ? (
-                    <Badge variant="success" className="text-micro flex items-center gap-1">
-                      <CheckCircle2 className="w-3 h-3" /> Qualified ({Math.round(userTaskSubmission.score)}%)
-                    </Badge>
-                  ) : (
-                    <Badge variant="error" className="text-micro">
-                      Score: {Math.round(userTaskSubmission.score)}%
-                    </Badge>
-                  )
-                ) : (
-                  <Badge variant="warning" className="text-micro">Required Task</Badge>
-                )}
-              </div>
-
-              <div>
-                <h4 className="text-body font-semibold text-ink leading-snug">
-                  {assignedTask.assessment_title}
-                </h4>
-                <p className="text-micro text-ink-muted mt-1">
-                  The recruiter requires applicants to complete this screening assessment.
-                </p>
-              </div>
-
-              <div className="grid grid-cols-2 gap-2 text-micro text-center bg-surface-2 p-2 rounded-lg border border-hairline font-mono">
-                <div>
-                  <span className="text-ink-muted block text-[10px]">Duration</span>
-                  <span className="font-bold text-ink">{assignedTask.duration_minutes} mins</span>
-                </div>
-                <div>
-                  <span className="text-ink-muted block text-[10px]">Passing Score</span>
-                  <span className="font-bold text-ink">{assignedTask.passing_score}%</span>
-                </div>
-              </div>
-
-              {!userTaskSubmission?.passed ? (
-                <Link
-                  href={`/skills/assessments/${assignedTask.assessment_id}`}
-                  className="w-full block"
-                >
-                  <Button className="w-full rounded-pill bg-accent-blue text-ink hover:bg-accent-blue/90 text-body-sm">
-                    <ClipboardCheck className="w-4 h-4 mr-1.5" />
-                    {userTaskSubmission ? "Retake Screening Task" : "Complete Screening Task"}
-                  </Button>
-                </Link>
-              ) : (
-                <div className="text-micro text-semantic-success flex items-center gap-1.5 font-medium justify-center pt-1">
-                  <CheckCircle2 className="w-3.5 h-3.5" />
-                  Prerequisite Verified &amp; Attached to Application
-                </div>
-              )}
-            </Card>
-          )}
 
           {/* Apply Card */}
           <Card className="p-5">
