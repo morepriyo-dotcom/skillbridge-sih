@@ -193,21 +193,70 @@ export default function RecruiterKanban({ initialApplicants }: { initialApplican
               </div>
             </div>
 
-            <div className="flex justify-end gap-3 pt-2">
-              <Button variant="secondary" className="rounded-pill" onClick={() => setSelectedCandidate(null)}>
-                Close
-              </Button>
-              {selectedCandidate.status === 'shortlisted' && (
-                <Button
-                  className="rounded-pill"
-                  onClick={() => {
-                    moveStatus(selectedCandidate.id, 'interview_scheduled');
-                    setSelectedCandidate(null);
-                  }}
-                >
-                  Schedule Technical Interview
+            <div className="flex items-center justify-between gap-3 pt-2">
+              <div>
+                {!['rejected', 'hired'].includes(selectedCandidate.status) && (
+                  <Button
+                    variant="ghost"
+                    className="rounded-pill text-xs text-semantic-error hover:bg-semantic-error/10"
+                    onClick={() => {
+                      moveStatus(selectedCandidate.id, 'rejected');
+                      setSelectedCandidate(null);
+                    }}
+                  >
+                    Reject
+                  </Button>
+                )}
+              </div>
+              <div className="flex gap-2">
+                <Button variant="secondary" className="rounded-pill" onClick={() => setSelectedCandidate(null)}>
+                  Close
                 </Button>
-              )}
+                {selectedCandidate.status === 'applied' && (
+                  <Button
+                    className="rounded-pill bg-accent-blue text-white hover:opacity-90"
+                    onClick={() => {
+                      moveStatus(selectedCandidate.id, 'shortlisted');
+                      setSelectedCandidate(null);
+                    }}
+                  >
+                    Shortlist
+                  </Button>
+                )}
+                {selectedCandidate.status === 'shortlisted' && (
+                  <Button
+                    className="rounded-pill bg-accent-blue text-white hover:opacity-90"
+                    onClick={() => {
+                      moveStatus(selectedCandidate.id, 'interview_scheduled');
+                      setSelectedCandidate(null);
+                    }}
+                  >
+                    Schedule Interview
+                  </Button>
+                )}
+                {selectedCandidate.status === 'interview_scheduled' && (
+                  <Button
+                    className="rounded-pill bg-accent-blue text-white hover:opacity-90"
+                    onClick={() => {
+                      moveStatus(selectedCandidate.id, 'offered');
+                      setSelectedCandidate(null);
+                    }}
+                  >
+                    Make Offer
+                  </Button>
+                )}
+                {selectedCandidate.status === 'offered' && (
+                  <Button
+                    className="rounded-pill bg-semantic-success text-white hover:bg-semantic-success/90"
+                    onClick={() => {
+                      moveStatus(selectedCandidate.id, 'hired');
+                      setSelectedCandidate(null);
+                    }}
+                  >
+                    Confirm Hired
+                  </Button>
+                )}
+              </div>
             </div>
           </Card>
         </div>

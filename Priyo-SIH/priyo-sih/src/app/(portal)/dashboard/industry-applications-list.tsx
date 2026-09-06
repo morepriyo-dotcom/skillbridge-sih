@@ -250,6 +250,21 @@ export function IndustryApplicationsList({
                     </Button>
                   )}
 
+                  {app.status === 'offered' && (
+                    <Button
+                      size="sm"
+                      className="rounded-pill px-3.5 h-8 text-xs font-medium bg-semantic-success text-white hover:bg-semantic-success/90"
+                      disabled={isLoading}
+                      onClick={() => handleStatusChange(app.id, 'hired')}
+                    >
+                      {isLoading ? (
+                        <Loader2 className="w-3 h-3 animate-spin" />
+                      ) : (
+                        'Confirm Hire'
+                      )}
+                    </Button>
+                  )}
+
                   <Link href="/recruiter/applicants">
                     <Button
                       size="sm"
